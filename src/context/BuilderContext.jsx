@@ -4,6 +4,8 @@ import { DEFAULT_TITLE_FORMATTING } from '../constants/textFormatting';
 
 const BuilderContext = createContext(null);
 
+export { BuilderContext };
+
 const title1 = createElement(COMPONENT_TYPES.TITLE);
 const image = createElement(COMPONENT_TYPES.IMAGE);
 const title2 = createElement(COMPONENT_TYPES.TITLE);
@@ -16,6 +18,10 @@ const initialState = {
   activeTab: 'Build',
   previewMode: 'desktop',
   pageTitle: 'My Site',
+  pageId: null,
+  publishSlug: null,
+  saveStatus: 'idle',
+  saveMessage: '',
 };
 
 function updateElementProps(elements, id, updates) {
@@ -68,6 +74,31 @@ function builderReducer(state, action) {
 
     case 'SET_PAGE_TITLE':
       return { ...state, pageTitle: action.payload };
+
+    case 'SET_PAGE_ID':
+      return { ...state, pageId: action.payload };
+
+    case 'SET_PUBLISH_SLUG':
+      return { ...state, publishSlug: action.payload };
+
+    case 'SET_SAVE_STATUS':
+      return {
+        ...state,
+        saveStatus: action.payload.status,
+        saveMessage: action.payload.message || '',
+      };
+
+    case 'LOAD_PAGE':
+      return {
+        ...state,
+        pageId: action.payload.id,
+        pageTitle: action.payload.layout_data?.pageTitle || action.payload.page_name,
+        previewMode: action.payload.layout_data?.previewMode || 'desktop',
+        elements: action.payload.layout_data?.elements || [],
+        selectedId: null,
+        saveStatus: 'idle',
+        saveMessage: '',
+      };
 
     default:
       return state;

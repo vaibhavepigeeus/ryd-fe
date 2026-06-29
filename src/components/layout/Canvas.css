@@ -11,6 +11,7 @@
 
 .canvas--mobile .canvas-page {
   max-width: 375px;
+  overflow-x: hidden;
 }
 
 .canvas-page {
@@ -70,6 +71,11 @@
 .canvas-content {
   padding: 24px 32px 32px;
   min-height: 200px;
+  min-width: 0;
+}
+
+.canvas--mobile .canvas-content {
+  overflow-x: hidden;
 }
 
 .canvas-empty {

@@ -1,7 +1,33 @@
+import { useBuilderOptional } from '../../hooks/useBuilderOptional';
+import { FormFieldInput, stopFormInteraction } from './FormFieldInput';
 import './elements.css';
 
-export default function ContactFormElement({ element }) {
-  const { title, fields, submitLabel } = element.props;
+export default function ContactFormElement({
+  element,
+  answers: externalAnswers,
+  onAnswerChange,
+}) {
+  const builder = useBuilderOptional();
+  const { title, fields, submitLabel, answers: storedAnswers = {} } = element.props;
+  const answers = externalAnswers ?? storedAnswers;
+
+  const handleAnswerChange = (fieldId, value) => {
+    if (onAnswerChange) {
+      onAnswerChange(fieldId, value);
+      return;
+    }
+
+    if (!builder) return;
+    builder.dispatch({
+      type: 'UPDATE_ELEMENT',
+      payload: {
+        id: element.id,
+        props: {
+          answers: { ...answers, [fieldId]: value },
+        },
+      },
+    });
+  };
 
   return (
     <div className="el-form">
@@ -9,21 +35,30 @@ export default function ContactFormElement({ element }) {
       <div className="el-form-fields">
         {fields.map((field) => (
           <div key={field.id} className="el-form-field">
-            <label className="el-form-label">
+            <label className="el-form-label" htmlFor={`${element.id}-${field.id}`}>
               {field.label}
               {field.required && <span className="el-form-required">*</span>}
             </label>
-            {field.type === 'textarea' ? (
-              <textarea className="el-form-input" rows={4} placeholder={field.label} readOnly />
-            ) : (
-              <input className="el-form-input" type={field.type} placeholder={field.label} readOnly />
-            )}
+            <FormFieldInput
+              id={`${element.id}-${field.id}`}
+              field={field}
+              value={answers[field.id]}
+              onChange={(value) => handleAnswerChange(field.id, value)}
+              className="el-form-input"
+            />
           </div>
         ))}
       </div>
-      <button type="button" className="el-form-submit">
-        {submitLabel}
-      </button>
+      {!onAnswerChange && (
+        <button
+          type="button"
+          className="el-form-submit"
+          onClick={stopFormInteraction}
+          onMouseDown={stopFormInteraction}
+        >
+          {submitLabel}
+        </button>
+      )}
     </div>
   );
 }

@@ -17,6 +17,15 @@ body {
   -webkit-font-smoothing: antialiased;
   background: #1a1a1a;
   color: #e8e8e8;
+}
+
+body:has(.published-page) {
+  overflow: auto;
+  background: #fff;
+}
+
+.app {
+  height: 100vh;
   overflow: hidden;
 }
 

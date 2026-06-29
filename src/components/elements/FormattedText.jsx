@@ -1,4 +1,4 @@
-import { useBuilder } from '../../context/BuilderContext';
+import { useBuilderOptional } from '../../hooks/useBuilderOptional';
 import {
   buildTextStyle,
   DEFAULT_TEXT_FORMATTING,
@@ -6,8 +6,8 @@ import {
 } from '../../constants/textFormatting';
 import './elements.css';
 
-export default function FormattedText({ element, tag: Tag = 'p', className }) {
-  const { dispatch } = useBuilder();
+export default function FormattedText({ element, tag: Tag = 'p', className, readOnly = false }) {
+  const builder = useBuilderOptional();
   const { content, formatting } = element.props;
 
   const defaultFormatting =
@@ -15,11 +15,20 @@ export default function FormattedText({ element, tag: Tag = 'p', className }) {
   const style = buildTextStyle(formatting || defaultFormatting);
 
   const handleBlur = (e) => {
-    dispatch({
+    if (!builder) return;
+    builder.dispatch({
       type: 'UPDATE_ELEMENT',
       payload: { id: element.id, props: { content: e.target.textContent } },
     });
   };
+
+  if (readOnly || !builder) {
+    return (
+      <Tag className={className} style={style}>
+        {content}
+      </Tag>
+    );
+  }
 
   return (
     <Tag

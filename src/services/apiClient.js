@@ -35,3 +35,29 @@ export async function apiFetch(path, options = {}) {
 
   return response.json();
 }
+
+export async function apiUpload(path, formData, options = {}) {
+  const url = `${getApiBaseUrl()}${path.startsWith('/') ? path : `/${path}`}`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData,
+    ...options,
+  });
+
+  if (!response.ok) {
+    let message = `Upload failed: ${response.status}`;
+
+    try {
+      const body = await response.json();
+      message = body.message || body.error || body.detail || message;
+    } catch {
+      // ignore JSON parse errors
+    }
+
+    throw new Error(message);
+  }
+
+  return response.json();
+}

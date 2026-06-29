@@ -1,6 +1,7 @@
 .el-questionnaire {
   max-width: 100%;
   padding: 8px 0;
+  box-sizing: border-box;
 }
 
 .el-questionnaire-title {
@@ -61,6 +62,7 @@
 
 .el-questionnaire-input {
   width: 100%;
+  max-width: 100%;
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 2px;
@@ -73,4 +75,9 @@
 .el-questionnaire-input:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.el-form-input,
+.el-questionnaire-input {
+  cursor: text;
 }

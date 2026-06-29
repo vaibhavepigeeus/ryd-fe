@@ -4,6 +4,7 @@
   border: 2px solid transparent;
   border-radius: 2px;
   transition: border-color 0.15s;
+  max-width: 100%;
 }
 
 .canvas-element:hover {
@@ -12,6 +13,11 @@
 
 .canvas-element--selected {
   border-color: var(--color-primary);
+}
+
+.canvas-element-content {
+  position: relative;
+  max-width: 100%;
 }
 
 .element-controls {
@@ -60,15 +66,39 @@
   letter-spacing: 2px;
 }
 
-.canvas-element--selected::after {
-  content: '';
+.resize-handle {
   position: absolute;
-  bottom: -4px;
-  right: -4px;
-  width: 10px;
-  height: 10px;
+  z-index: 12;
   background: var(--color-primary);
   border: 2px solid #fff;
-  border-radius: 1px;
+  box-sizing: border-box;
+}
+
+.resize-handle--e {
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 28px;
+  border-radius: 2px;
+  cursor: e-resize;
+}
+
+.resize-handle--s {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 10px;
+  border-radius: 2px;
+  cursor: s-resize;
+}
+
+.resize-handle--se {
+  bottom: -5px;
+  right: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
   cursor: se-resize;
 }

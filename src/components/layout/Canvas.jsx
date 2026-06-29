@@ -12,7 +12,13 @@ export default function Canvas() {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const handleCanvasClick = (e) => {
-    if (e.target === e.currentTarget || e.target.closest('.canvas-page')) {
+    const isEmptyArea =
+      e.target.classList.contains('canvas') ||
+      e.target.classList.contains('canvas-content') ||
+      e.target.classList.contains('canvas-page') ||
+      e.target.classList.contains('canvas-empty');
+
+    if (isEmptyArea) {
       dispatch({ type: 'SELECT_ELEMENT', payload: null });
     }
   };

@@ -1,8 +1,38 @@
-import { useBuilder } from '../../context/BuilderContext';
+import { useBuilderOptional } from '../../hooks/useBuilderOptional';
+import { FormFieldInput } from './FormFieldInput';
+import {
+  getQuestionnaireFieldKey,
+  getQuestionnaireFieldInputId,
+  getQuestionnaireFieldAnswer,
+} from '../../utils/questionnaireField';
 import './QuestionnaireElement.css';
 
-export default function QuestionnaireElement({ element }) {
-  const { title, subtitle, sections } = element.props;
+export default function QuestionnaireElement({
+  element,
+  answers: externalAnswers,
+  onAnswerChange,
+}) {
+  const builder = useBuilderOptional();
+  const { title, subtitle, sections, answers: storedAnswers = {} } = element.props;
+  const answers = externalAnswers ?? storedAnswers;
+
+  const handleAnswerChange = (fieldId, value) => {
+    if (onAnswerChange) {
+      onAnswerChange(fieldId, value);
+      return;
+    }
+
+    if (!builder) return;
+    builder.dispatch({
+      type: 'UPDATE_ELEMENT',
+      payload: {
+        id: element.id,
+        props: {
+          answers: { ...answers, [fieldId]: value },
+        },
+      },
+    });
+  };
 
   return (
     <div className="el-questionnaire">
@@ -15,28 +45,26 @@ export default function QuestionnaireElement({ element }) {
           <p className="el-questionnaire-required-note">* Indicates required field</p>
 
           <div className="el-questionnaire-fields">
-            {section.fields.map((field) => (
-              <div key={field.id} className="el-questionnaire-field">
-                <label className="el-questionnaire-label">
+            {section.fields.map((field, fieldIndex) => {
+              const fieldKey = getQuestionnaireFieldKey(section.id, fieldIndex, field.id);
+              const inputId = getQuestionnaireFieldInputId(element.id, section.id, fieldIndex);
+
+              return (
+              <div key={fieldKey} className="el-questionnaire-field">
+                <label className="el-questionnaire-label" htmlFor={inputId}>
                   {field.label}
                   {field.required && <span className="el-questionnaire-asterisk"> *</span>}
                 </label>
-                {field.type === 'textarea' ? (
-                  <textarea
-                    className="el-questionnaire-input"
-                    rows={4}
-                    readOnly
-                    placeholder=""
-                  />
-                ) : (
-                  <input
-                    className="el-questionnaire-input"
-                    type={field.type || 'text'}
-                    readOnly
-                  />
-                )}
+                <FormFieldInput
+                  id={inputId}
+                  field={field}
+                  value={getQuestionnaireFieldAnswer(answers, fieldKey, field.id)}
+                  onChange={(value) => handleAnswerChange(fieldKey, value)}
+                  className="el-questionnaire-input"
+                />
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}

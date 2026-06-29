@@ -47,6 +47,39 @@ export const DRAG_TYPES = {
   QUESTIONNAIRE: 'questionnaire-id',
 };
 
+export const RESIZABLE_ELEMENT_TYPES = new Set([
+  COMPONENT_TYPES.TITLE,
+  COMPONENT_TYPES.TEXT,
+  COMPONENT_TYPES.IMAGE,
+  COMPONENT_TYPES.CONTACT_FORM,
+  COMPONENT_TYPES.NEWSLETTER_FORM,
+  COMPONENT_TYPES.QUESTIONNAIRE,
+]);
+
+export const MIN_ELEMENT_WIDTH = 100;
+export const MIN_ELEMENT_HEIGHT = 60;
+
+export function isResizableElement(type) {
+  return RESIZABLE_ELEMENT_TYPES.has(type);
+}
+
+export function getElementSizeStyle(props = {}) {
+  const style = {};
+  if (props.width != null) style.width = `${props.width}px`;
+  if (props.height != null) style.height = `${props.height}px`;
+  return style;
+}
+
+export function getElementSizeClassName(props = {}) {
+  return [
+    'element-sized',
+    props.width != null ? 'element-sized--width' : '',
+    props.height != null ? 'element-sized--height' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
 export function createElement(type, overrides = {}) {
   const id = crypto.randomUUID();
 
@@ -55,15 +88,22 @@ export function createElement(type, overrides = {}) {
       content: 'Click here to edit.',
       level: 'h1',
       formatting: { ...DEFAULT_TITLE_FORMATTING },
+      width: null,
+      height: null,
     },
     [COMPONENT_TYPES.TEXT]: {
       content: 'Add your text here. Double-click to edit.',
       formatting: { ...DEFAULT_TEXT_FORMATTING },
+      width: null,
+      height: null,
     },
     [COMPONENT_TYPES.IMAGE]: {
-      src: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800&q=80',
-      alt: 'Placeholder image',
-      width: '100%',
+      src: '',
+      alt: 'Image',
+      documentId: null,
+      documentName: '',
+      width: null,
+      height: null,
     },
     [COMPONENT_TYPES.BUTTON]: {
       label: 'Get Started',
@@ -78,17 +118,26 @@ export function createElement(type, overrides = {}) {
         { id: 'message', label: 'Message', type: 'textarea', required: true },
       ],
       submitLabel: 'Send Message',
+      answers: {},
+      width: 480,
+      height: null,
     },
     [COMPONENT_TYPES.NEWSLETTER_FORM]: {
       title: 'Subscribe',
       placeholder: 'Enter your email',
       submitLabel: 'Subscribe',
+      answers: {},
+      width: 480,
+      height: null,
     },
     [COMPONENT_TYPES.QUESTIONNAIRE]: {
       questionnaireId: '',
       title: '',
       subtitle: '',
       sections: [],
+      answers: {},
+      width: 480,
+      height: null,
     },
     [COMPONENT_TYPES.SECTION]: {
       children: [],
@@ -117,5 +166,6 @@ export function createQuestionnaireElement(questionnaire) {
     title: questionnaire.title,
     subtitle: questionnaire.subtitle,
     sections: questionnaire.sections,
+    answers: {},
   });
 }

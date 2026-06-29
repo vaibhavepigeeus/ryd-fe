@@ -1,23 +1,21 @@
-import { createContext, useContext, useReducer } from 'react';
-import { createElement, createQuestionnaireElement, createFormQuestionElement, COMPONENT_TYPES } from '../constants/builder';
-import { DEFAULT_TITLE_FORMATTING } from '../constants/textFormatting';
+import { createContext, useContext, useEffect, useReducer, useState } from 'react';
+import { createElement, createQuestionnaireElement, createFormQuestionElement } from '../constants/builder';
+import { loadPage } from '../services/pageApi';
+
+const LAST_PAGE_ID_KEY = 'ryd:lastPageId';
+
+export { LAST_PAGE_ID_KEY };
 
 const BuilderContext = createContext(null);
 
 export { BuilderContext };
 
-const title1 = createElement(COMPONENT_TYPES.TITLE);
-const image = createElement(COMPONENT_TYPES.IMAGE);
-const title2 = createElement(COMPONENT_TYPES.TITLE);
-title2.props.content = 'Relax. Revive. Repeat.';
-title2.props.formatting = { ...DEFAULT_TITLE_FORMATTING, color: '#9a3470', fontSize: '32' };
-
 const initialState = {
-  elements: [title1, image, title2],
+  elements: [],
   selectedId: null,
   activeTab: 'Build',
   previewMode: 'desktop',
-  pageTitle: 'My Site',
+  pageTitle: '',
   pageId: null,
   publishSlug: null,
   saveStatus: 'idle',
@@ -91,8 +89,12 @@ function builderReducer(state, action) {
     case 'SET_PAGE_TITLE':
       return { ...state, pageTitle: action.payload };
 
-    case 'SET_PAGE_ID':
+    case 'SET_PAGE_ID': {
+      if (action.payload) {
+        localStorage.setItem(LAST_PAGE_ID_KEY, String(action.payload));
+      }
       return { ...state, pageId: action.payload };
+    }
 
     case 'SET_PUBLISH_SLUG':
       return { ...state, publishSlug: action.payload };
@@ -104,16 +106,27 @@ function builderReducer(state, action) {
         saveMessage: action.payload.message || '',
       };
 
-    case 'LOAD_PAGE':
+    case 'LOAD_PAGE': {
+      localStorage.setItem(LAST_PAGE_ID_KEY, String(action.payload.id));
       return {
         ...state,
         pageId: action.payload.id,
         pageTitle: action.payload.layout_data?.pageTitle || action.payload.page_name,
         previewMode: action.payload.layout_data?.previewMode || 'desktop',
         elements: action.payload.layout_data?.elements || [],
+        publishSlug: action.payload.publish_slug || null,
         selectedId: null,
         saveStatus: 'idle',
         saveMessage: '',
+      };
+    }
+
+    case 'NEW_PAGE':
+      localStorage.removeItem(LAST_PAGE_ID_KEY);
+      return {
+        ...initialState,
+        activeTab: 'Build',
+        previewMode: state.previewMode,
       };
 
     default:
@@ -123,6 +136,46 @@ function builderReducer(state, action) {
 
 export function BuilderProvider({ children }) {
   const [state, dispatch] = useReducer(builderReducer, initialState);
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function restoreLastPage() {
+      const savedId = localStorage.getItem(LAST_PAGE_ID_KEY);
+      if (!savedId) {
+        setInitializing(false);
+        return;
+      }
+
+      try {
+        const page = await loadPage(savedId);
+        if (!cancelled) {
+          dispatch({ type: 'LOAD_PAGE', payload: page });
+          dispatch({ type: 'SET_TAB', payload: 'Build' });
+        }
+      } catch {
+        localStorage.removeItem(LAST_PAGE_ID_KEY);
+      } finally {
+        if (!cancelled) {
+          setInitializing(false);
+        }
+      }
+    }
+
+    restoreLastPage();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (initializing) {
+    return (
+      <div className="app-loading">
+        <p>Loading your page...</p>
+      </div>
+    );
+  }
 
   return (
     <BuilderContext.Provider value={{ state, dispatch }}>

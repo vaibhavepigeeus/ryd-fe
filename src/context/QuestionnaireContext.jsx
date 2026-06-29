@@ -7,10 +7,15 @@ import {
 
 const QuestionnaireContext = createContext(null);
 
+export { QuestionnaireContext };
+
 export function QuestionnaireProvider({ children }) {
   const [questionnaires, setQuestionnaires] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [questionsRevision, setQuestionsRevision] = useState(0);
+  const [questionsRefreshing, setQuestionsRefreshing] = useState(false);
+  const [lastSavedQuestionId, setLastSavedQuestionId] = useState(null);
   const cacheRef = useRef({});
 
   useEffect(() => {
@@ -41,6 +46,13 @@ export function QuestionnaireProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!lastSavedQuestionId) return undefined;
+
+    const timer = window.setTimeout(() => setLastSavedQuestionId(null), 3000);
+    return () => window.clearTimeout(timer);
+  }, [lastSavedQuestionId]);
+
   const getQuestionnaire = useCallback(async (id) => {
     if (cacheRef.current[id]) return cacheRef.current[id];
 
@@ -58,9 +70,37 @@ export function QuestionnaireProvider({ children }) {
     return data;
   }, []);
 
+  const refreshFormQuestions = useCallback(async (formTypeId, savedQuestionId = null) => {
+    const cacheKey = `questions-${formTypeId}`;
+    delete cacheRef.current[cacheKey];
+
+    setQuestionsRefreshing(true);
+    try {
+      const data = await fetchFormQuestions(formTypeId);
+      cacheRef.current[cacheKey] = data;
+      setQuestionsRevision((revision) => revision + 1);
+      if (savedQuestionId) {
+        setLastSavedQuestionId(String(savedQuestionId));
+      }
+      return data;
+    } finally {
+      setQuestionsRefreshing(false);
+    }
+  }, []);
+
   return (
     <QuestionnaireContext.Provider
-      value={{ questionnaires, loading, error, getQuestionnaire, getFormQuestions }}
+      value={{
+        questionnaires,
+        loading,
+        error,
+        getQuestionnaire,
+        getFormQuestions,
+        refreshFormQuestions,
+        questionsRevision,
+        questionsRefreshing,
+        lastSavedQuestionId,
+      }}
     >
       {children}
     </QuestionnaireContext.Provider>

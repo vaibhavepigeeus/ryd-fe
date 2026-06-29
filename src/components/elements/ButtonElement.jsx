@@ -1,7 +1,7 @@
 import { useBuilderOptional } from '../../hooks/useBuilderOptional';
 import './elements.css';
 
-export default function ButtonElement({ element, readOnly = false }) {
+export default function ButtonElement({ element, readOnly = false, submitting = false }) {
   const builder = useBuilderOptional();
   const { label, variant } = element.props;
 
@@ -13,10 +13,24 @@ export default function ButtonElement({ element, readOnly = false }) {
     });
   };
 
-  if (readOnly || !builder) {
+  if (readOnly) {
     return (
       <div className="el-button-wrap">
         <span className={`el-button el-button--${variant}`}>{label}</span>
+      </div>
+    );
+  }
+
+  if (!builder) {
+    return (
+      <div className="el-button-wrap">
+        <button
+          type="submit"
+          className={`el-button el-button--${variant} el-button--published`}
+          disabled={submitting}
+        >
+          {submitting ? 'Submitting...' : label}
+        </button>
       </div>
     );
   }

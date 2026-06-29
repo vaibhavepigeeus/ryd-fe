@@ -1,6 +1,7 @@
 import {
   DEFAULT_TEXT_FORMATTING,
   DEFAULT_TITLE_FORMATTING,
+  contentToHtml,
 } from './textFormatting';
 
 export const COMPONENT_TYPES = {
@@ -15,6 +16,9 @@ export const COMPONENT_TYPES = {
   SECTION: 'section',
   DIVIDER: 'divider',
   SPACER: 'spacer',
+  MAP: 'map',
+  TABLE: 'table',
+  SOCIAL_ICONS: 'social-icons',
 };
 
 export const PALETTE_SECTIONS = [
@@ -26,6 +30,9 @@ export const PALETTE_SECTIONS = [
       { type: COMPONENT_TYPES.TEXT, label: 'Text', icon: '≡' },
       { type: COMPONENT_TYPES.IMAGE, label: 'Image', icon: '🖼' },
       { type: COMPONENT_TYPES.BUTTON, label: 'Button', icon: '▭' },
+      { type: COMPONENT_TYPES.MAP, label: 'Map', icon: '📍' },
+      { type: COMPONENT_TYPES.TABLE, label: 'Table', icon: '⊞' },
+      { type: COMPONENT_TYPES.SOCIAL_ICONS, label: 'Social Icons', icon: '◎' },
       { type: COMPONENT_TYPES.CONTACT_FORM, label: 'Contact Form', icon: '☑' },
       { type: COMPONENT_TYPES.NEWSLETTER_FORM, label: 'Newsletter Form', icon: '✉' },
     ],
@@ -53,6 +60,8 @@ export const RESIZABLE_ELEMENT_TYPES = new Set([
   COMPONENT_TYPES.TITLE,
   COMPONENT_TYPES.TEXT,
   COMPONENT_TYPES.IMAGE,
+  COMPONENT_TYPES.MAP,
+  COMPONENT_TYPES.TABLE,
   COMPONENT_TYPES.CONTACT_FORM,
   COMPONENT_TYPES.NEWSLETTER_FORM,
   COMPONENT_TYPES.QUESTIONNAIRE,
@@ -146,6 +155,11 @@ export function createElement(type, overrides = {}) {
       sourceQuestionId: '',
       questionId: '',
       label: 'Question',
+      savedLabel: '',
+      labelHtml: '',
+      savedLabelHtml: '',
+      labelFormatting: { ...DEFAULT_TEXT_FORMATTING },
+      version: '',
       fieldType: 'text',
       required: true,
       formTypeId: '',
@@ -164,6 +178,25 @@ export function createElement(type, overrides = {}) {
     },
     [COMPONENT_TYPES.SPACER]: {
       height: 48,
+    },
+    [COMPONENT_TYPES.MAP]: {
+      address: '1600 Amphitheatre Parkway, Mountain View, CA',
+      height: 300,
+      width: null,
+    },
+    [COMPONENT_TYPES.TABLE]: {
+      cells: Array.from({ length: 3 }, () => Array.from({ length: 4 }, () => '')),
+      width: null,
+      height: null,
+    },
+    [COMPONENT_TYPES.SOCIAL_ICONS]: {
+      icons: [
+        { platform: 'facebook', url: '' },
+        { platform: 'twitter', url: '' },
+        { platform: 'instagram', url: '' },
+        { platform: 'linkedin', url: '' },
+        { platform: 'youtube', url: '' },
+      ],
     },
   };
 
@@ -185,10 +218,19 @@ export function createQuestionnaireElement(questionnaire) {
 }
 
 export function createFormQuestionElement(question) {
+  const labelFormatting = { ...DEFAULT_TEXT_FORMATTING };
+  const labelHtml =
+    question.labelHtml || contentToHtml(question.label, labelFormatting);
+
   return createElement(COMPONENT_TYPES.FORM_QUESTION, {
     sourceQuestionId: question.id,
     questionId: question.questionId,
     label: question.label,
+    savedLabel: question.label,
+    labelHtml,
+    savedLabelHtml: labelHtml,
+    labelFormatting,
+    version: question.version || '1.0',
     fieldType: question.type,
     required: question.required,
     formTypeId: question.formTypeId,

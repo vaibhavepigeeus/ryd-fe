@@ -1,6 +1,6 @@
-import FormattedText from './FormattedText';
+import RichTextBlock from './RichTextBlock';
 import './elements.css';
 
 export default function TextElement({ element, readOnly = false }) {
-  return <FormattedText element={element} tag="p" className="el-text" readOnly={readOnly} />;
+  return <RichTextBlock element={element} tag="p" className="el-text" readOnly={readOnly} />;
 }

@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
-import { BuilderProvider } from './context/BuilderContext';
+import { BuilderProvider, useBuilder } from './context/BuilderContext';
 import { QuestionnaireProvider } from './context/QuestionnaireContext';
 import TopBar from './components/layout/TopBar';
 import Sidebar from './components/layout/Sidebar';
+import PageStartScreen from './components/layout/PageStartScreen';
 import Canvas from './components/layout/Canvas';
 import RightPanel from './components/layout/RightPanel';
 import PanelResizeHandle from './components/layout/PanelResizeHandle';
@@ -17,9 +18,10 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
-export default function App() {
-  const [sidebarWidth, setSidebarWidth] = useState(200);
-  const [rightPanelWidth, setRightPanelWidth] = useState(220);
+function AppBody() {
+  const { state } = useBuilder();
+  const [sidebarWidth, setSidebarWidth] = useState(190);
+  const [rightPanelWidth, setRightPanelWidth] = useState(360);
 
   const resizeSidebar = useCallback((delta) => {
     setSidebarWidth((width) => clamp(width + delta, MIN_SIDEBAR_WIDTH, MAX_SIDEBAR_WIDTH));
@@ -29,19 +31,31 @@ export default function App() {
     setRightPanelWidth((width) => clamp(width - delta, MIN_RIGHT_PANEL_WIDTH, MAX_RIGHT_PANEL_WIDTH));
   }, []);
 
+  const showStartScreen = state.activeTab === 'Pages';
+
+  return (
+    <div className="app">
+      <TopBar />
+      <div className="app-body">
+        <Sidebar width={sidebarWidth} />
+        <PanelResizeHandle side="left" onResize={resizeSidebar} />
+        {showStartScreen ? <PageStartScreen /> : <Canvas />}
+        {!showStartScreen && (
+          <>
+            <PanelResizeHandle side="right" onResize={resizeRightPanel} />
+            <RightPanel width={rightPanelWidth} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <QuestionnaireProvider>
       <BuilderProvider>
-        <div className="app">
-          <TopBar />
-          <div className="app-body">
-            <Sidebar width={sidebarWidth} />
-            <PanelResizeHandle side="left" onResize={resizeSidebar} />
-            <Canvas />
-            <PanelResizeHandle side="right" onResize={resizeRightPanel} />
-            <RightPanel width={rightPanelWidth} />
-          </div>
-        </div>
+        <AppBody />
       </BuilderProvider>
     </QuestionnaireProvider>
   );

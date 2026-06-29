@@ -9,7 +9,7 @@
   color: #e8e8e8;
   background: #2d2d2d;
   border: 1px solid #555;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-bottom: 10px;
   cursor: pointer;
 }
@@ -96,7 +96,7 @@
   padding: 8px 10px;
   background: #2d2d2d;
   border: 1px solid #555;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .questionnaire-form-summary-title {
@@ -127,7 +127,7 @@
   color: #ddd;
   background: #3d3d3d;
   border: 1px solid #555;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .questionnaire-action-btn:hover:not(:disabled) {
@@ -148,6 +148,44 @@
 .questionnaire-action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.questionnaire-status--refreshing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c9a227;
+}
+
+.questionnaire-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(201, 162, 39, 0.25);
+  border-top-color: #c9a227;
+  border-radius: 50%;
+  animation: questionnaire-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes questionnaire-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.questionnaire-question-list-wrap {
+  position: relative;
+}
+
+.questionnaire-question-list-wrap--refreshing .questionnaire-question-list {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.questionnaire-question-item--saved .questionnaire-question-drag {
+  border-color: #2f855a;
+  background: #2f4a3d;
+  box-shadow: 0 0 0 1px rgba(47, 133, 90, 0.35);
 }
 
 .questionnaire-question-list {
@@ -179,7 +217,7 @@
   padding: 8px 10px;
   background: #3d3d3d;
   border: 1px solid #555;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: grab;
   transition: background 0.15s, border-color 0.15s;
 }

@@ -6,6 +6,7 @@ import {
   publishPage,
   savePage,
 } from '../../services/pageApi';
+import SavePageModal from './SavePageModal';
 import './PublishModal.css';
 import './TopBar.css';
 
@@ -49,18 +50,22 @@ export default function TopBar() {
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishUrl, setPublishUrl] = useState(null);
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
-  const handleSave = async () => {
+  const performSave = async (pageName) => {
     setSaving(true);
     dispatch({ type: 'SET_SAVE_STATUS', payload: { status: 'saving', message: 'Saving...' } });
 
     try {
-      const saved = await savePage(state, state.pageId);
+      dispatch({ type: 'SET_PAGE_TITLE', payload: pageName });
+      const stateToSave = { ...state, pageTitle: pageName };
+      const saved = await savePage(stateToSave, state.pageId);
       dispatch({ type: 'SET_PAGE_ID', payload: saved.id });
       dispatch({
         type: 'SET_SAVE_STATUS',
-        payload: { status: 'saved', message: 'Page saved successfully' },
+        payload: { status: 'saved', message: `"${pageName}" saved` },
       });
+      setShowSaveModal(false);
 
       setTimeout(() => {
         dispatch({ type: 'SET_SAVE_STATUS', payload: { status: 'idle', message: '' } });
@@ -73,6 +78,10 @@ export default function TopBar() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSaveClick = () => {
+    setShowSaveModal(true);
   };
 
   const handlePublish = async () => {
@@ -113,6 +122,9 @@ export default function TopBar() {
       ? 'Saved!'
       : 'Save';
 
+  const displayPageName =
+    state.pageTitle || (state.pageId ? `Page #${state.pageId}` : null);
+
   return (
     <>
       <header className="topbar">
@@ -121,6 +133,11 @@ export default function TopBar() {
             ✕
           </button>
           <div className="topbar-logo">R</div>
+          {displayPageName && (
+            <span className="topbar-page-name" title={displayPageName}>
+              {displayPageName}
+            </span>
+          )}
         </div>
 
         <nav className="topbar-nav">
@@ -166,7 +183,7 @@ export default function TopBar() {
           <button
             type="button"
             className={`btn-save ${state.saveStatus === 'saved' ? 'btn-save--success' : ''}`}
-            onClick={handleSave}
+            onClick={handleSaveClick}
             disabled={saving || publishing}
           >
             {saveLabel}
@@ -181,6 +198,16 @@ export default function TopBar() {
           </button>
         </div>
       </header>
+
+      {showSaveModal && (
+        <SavePageModal
+          initialName={state.pageTitle || ''}
+          isUpdate={Boolean(state.pageId)}
+          saving={saving}
+          onSave={performSave}
+          onClose={() => !saving && setShowSaveModal(false)}
+        />
+      )}
 
       {publishUrl && (
         <PublishModal url={publishUrl} onClose={() => setPublishUrl(null)} />

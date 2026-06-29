@@ -1,7 +1,7 @@
 import { PALETTE_SECTIONS, DRAG_TYPES } from '../../constants/builder';
 import './Sidebar.css';
 
-export default function Sidebar({ width = 200 }) {
+export default function Sidebar({ width = 190 }) {
   const handleDragStart = (e, type) => {
     e.dataTransfer.setData(DRAG_TYPES.COMPONENT, type);
     e.dataTransfer.effectAllowed = 'copy';

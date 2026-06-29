@@ -33,6 +33,13 @@ export async function loadPage(pageId) {
   return apiFetch(`/forms/pages/${pageId}/`);
 }
 
+export async function fetchPages() {
+  const data = await apiFetch('/forms/pages/');
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.results)) return data.results;
+  return [];
+}
+
 export async function publishPage(pageId) {
   return apiFetch(`/forms/pages/${pageId}/publish/`, {
     method: 'POST',

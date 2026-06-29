@@ -2,7 +2,7 @@
   position: relative;
   margin: 8px 0;
   border: 2px solid transparent;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   transition: border-color 0.15s;
   max-width: 100%;
 }
@@ -41,7 +41,7 @@
   background: var(--color-primary);
   color: #fff;
   font-size: 12px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 }
 
 .control-btn:hover {
@@ -61,7 +61,7 @@
   background: var(--color-primary);
   color: #fff;
   font-size: 14px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   cursor: grab;
   letter-spacing: 2px;
 }
@@ -72,6 +72,7 @@
   background: var(--color-primary);
   border: 2px solid #fff;
   box-sizing: border-box;
+  border-radius: 2px;
 }
 
 .resize-handle--e {
@@ -80,7 +81,6 @@
   transform: translateY(-50%);
   width: 10px;
   height: 28px;
-  border-radius: 2px;
   cursor: e-resize;
 }
 
@@ -90,7 +90,6 @@
   transform: translateX(-50%);
   width: 28px;
   height: 10px;
-  border-radius: 2px;
   cursor: s-resize;
 }
 
@@ -99,6 +98,5 @@
   right: -5px;
   width: 12px;
   height: 12px;
-  border-radius: 2px;
   cursor: se-resize;
 }

@@ -1,9 +1,27 @@
 /* Canvas content typography — base layout only; styles come from formatting props */
 .el-title,
-.el-text {
+.el-text,
+.rich-text-block {
   outline: none;
   min-height: 1.2em;
-  line-height: 1.4;
+  line-height: 1.45;
+}
+
+.rich-text-block--editable {
+  cursor: text;
+  border-radius: var(--radius-sm);
+  transition: box-shadow 0.15s, background 0.15s;
+}
+
+.rich-text-block--editable:focus {
+  background: rgba(154, 52, 112, 0.04);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.rich-text-block a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .element-sized {
@@ -19,6 +37,9 @@
 .element-sized .el-title,
 .element-sized .el-text,
 .element-sized .el-image-wrap,
+.element-sized .el-map,
+.element-sized .el-table-wrap,
+.element-sized .el-social,
 .element-sized .el-form,
 .element-sized .el-questionnaire,
 .element-sized .el-form-question {
@@ -31,6 +52,8 @@
 .element-sized--height .el-title,
 .element-sized--height .el-text,
 .element-sized--height .el-image-wrap,
+.element-sized--height .el-map,
+.element-sized--height .el-table-wrap,
 .element-sized--height .el-form,
 .element-sized--height .el-questionnaire,
 .element-sized--height .el-form-question {
@@ -48,6 +71,8 @@
 }
 
 .element-sized--height .el-form,
+.element-sized--height .el-map,
+.element-sized--height .el-table-wrap,
 .element-sized--height .el-questionnaire,
 .element-sized--height .el-title,
 .element-sized--height .el-text,
@@ -111,6 +136,24 @@
 .el-button--primary {
   background: var(--color-primary);
   color: #fff;
+}
+
+button.el-button {
+  border: none;
+  font-family: inherit;
+}
+
+.el-button--published {
+  cursor: pointer;
+}
+
+.el-button--published:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.el-button--published:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .el-form {
@@ -214,4 +257,156 @@
 
 .el-spacer {
   width: 100%;
+}
+
+.el-map {
+  width: 100%;
+}
+
+.el-map-address {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.el-map--selected .el-map-address {
+  border-color: var(--color-primary);
+}
+
+.el-map-frame {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #f7f7f7;
+}
+
+.el-map-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.el-map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  min-height: 160px;
+  color: #888;
+  font-size: 14px;
+}
+
+.el-map-placeholder-icon {
+  font-size: 28px;
+  opacity: 0.6;
+}
+
+.el-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.el-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.el-table-cell {
+  border: 1px solid #e2e8f0;
+  padding: 0;
+  min-width: 80px;
+  vertical-align: top;
+}
+
+.el-table-cell-text {
+  display: block;
+  min-height: 36px;
+  padding: 8px 10px;
+  outline: none;
+}
+
+.el-table-wrap--selected .el-table-cell {
+  border-color: #d6bcfa;
+}
+
+.el-social {
+  width: 100%;
+  padding: 8px 0;
+}
+
+.el-social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.el-social-link,
+.el-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #475569;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.el-social-link svg,
+.el-social-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.el-social-link:hover {
+  background: var(--color-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.el-social-icon--active {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.el-social-urls {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.el-social-url-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.el-social-url-row input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.el-social--selected .el-social-url-row input:focus {
+  border-color: var(--color-primary);
+  outline: none;
 }

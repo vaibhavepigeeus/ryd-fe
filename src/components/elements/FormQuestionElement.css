@@ -1,28 +1,118 @@
 .el-form-question {
+  position: relative;
   width: 100%;
   padding: 8px 0;
   box-sizing: border-box;
 }
 
-.el-form-question-label {
-  display: block;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #333;
-  line-height: 1.4;
+.el-form-question--saving .el-form-question-label-row,
+.el-form-question--saving .el-form-question-meta,
+.el-form-question--saving .el-form-question-input {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.el-form-question-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 4px;
+}
+
+.el-form-question-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(154, 52, 112, 0.2);
+  border-top-color: var(--color-primary, #9a3470);
+  border-radius: 50%;
+  animation: el-form-question-spin 0.7s linear infinite;
+}
+
+.el-form-question-loading-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary, #9a3470);
+}
+
+@keyframes el-form-question-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.el-form-question-meta {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  color: #777;
+  text-transform: capitalize;
+}
+
+.el-form-question-meta-status--saved {
+  color: #2f855a;
+  font-weight: 600;
+}
+
+.el-form-question-label-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
   margin-bottom: 6px;
 }
 
-.el-form-question-label-text {
-  outline: none;
+.el-form-question-label {
+  display: block;
+  flex: 1;
+  line-height: 1.4;
+  margin-bottom: 0;
 }
 
-.el-form-question-label-text:focus {
-  background: rgba(154, 52, 112, 0.06);
-  border-radius: 2px;
+.el-form-question-label-text {
+  display: inline;
+  outline: none;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
 .el-form-question-required {
+  color: #e53e3e;
+}
+
+.el-form-question-save {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-primary, #9a3470);
+  border-radius: 4px;
+  background: var(--color-primary, #9a3470);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.el-form-question-save:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.el-form-question-save:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.el-form-question-save-error {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
   color: #e53e3e;
 }
 

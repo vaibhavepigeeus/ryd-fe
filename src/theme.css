@@ -3,4 +3,13 @@
   --color-primary-dark: #7a2a5a;
   --color-primary-light: rgba(154, 52, 112, 0.25);
   --color-primary-hover: #b03d84;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.15);
+  --shadow-float: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-canvas: 0 2px 12px rgba(0, 0, 0, 0.15);
 }

@@ -1,12 +1,13 @@
 .canvas {
   flex: 1;
+  min-width: 0;
+  min-height: 0;
   overflow: auto;
   background: #e8e8e8;
   padding: 24px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 0;
 }
 
 .canvas--mobile .canvas-page {
@@ -19,7 +20,8 @@
   max-width: 900px;
   min-height: calc(100vh - 96px);
   background: #fff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-canvas);
   display: flex;
   flex-direction: column;
   transition: max-width 0.3s;
@@ -52,6 +54,7 @@
   letter-spacing: 0.06em;
   border: 1px solid rgba(255, 255, 255, 0.6);
   padding: 4px 10px;
+  border-radius: var(--radius-sm);
 }
 
 .canvas-header-nav {
@@ -86,7 +89,7 @@
   color: #999;
   font-size: 14px;
   border: 2px dashed #ddd;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .canvas-drop-zone {

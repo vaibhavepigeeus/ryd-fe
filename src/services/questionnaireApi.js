@@ -69,6 +69,27 @@ export async function fetchQuestionnaireById(id) {
   };
 }
 
+function mapFormQuestion(question) {
+  const rawQuestion = question.question || '';
+  return {
+    id: String(question.id),
+    questionId: question.question_id || String(question.id),
+    label: stripHtml(rawQuestion),
+    labelHtml: rawQuestion,
+    type: question.answer_type,
+    required: true,
+    sequenceNo: question.sequence_no,
+    subsectionId: question.association_subsection,
+    formTypeId: String(question.form_type),
+    version: String(question.version),
+  };
+}
+
+export async function fetchFormQuestionById(questionId) {
+  const question = await apiFetch(`/forms/questions/${questionId}/`);
+  return mapFormQuestion(question);
+}
+
 export async function fetchFormQuestions(formTypeId) {
   const questions = await apiFetch(`/forms/questions/?form_type=${formTypeId}`);
 
@@ -77,16 +98,16 @@ export async function fetchFormQuestions(formTypeId) {
   }
 
   return questions
-    .map((question) => ({
-      id: String(question.id),
-      questionId: question.question_id || String(question.id),
-      label: stripHtml(question.question),
-      type: question.answer_type,
-      required: true,
-      sequenceNo: question.sequence_no,
-      subsectionId: question.association_subsection,
-      formTypeId: String(question.form_type),
-      version: String(question.version),
-    }))
+    .map(mapFormQuestion)
     .sort((a, b) => (a.sequenceNo ?? 0) - (b.sequenceNo ?? 0) || Number(a.id) - Number(b.id));
+}
+
+export async function createQuestionVersion(sourceQuestionId, questionText) {
+  const created = await apiFetch(`/forms/questions/${sourceQuestionId}/new-version/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question: questionText }),
+  });
+
+  return fetchFormQuestionById(String(created.id));
 }

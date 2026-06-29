@@ -6,7 +6,15 @@ import './QuestionnairePanel.css';
 
 export default function QuestionnairePanel() {
   const { dispatch } = useBuilder();
-  const { questionnaires, loading, error, getFormQuestions } = useQuestionnaires();
+  const {
+    questionnaires,
+    loading,
+    error,
+    getFormQuestions,
+    questionsRevision,
+    questionsRefreshing,
+    lastSavedQuestionId,
+  } = useQuestionnaires();
   const [selectedFormId, setSelectedFormId] = useState('');
   const [questions, setQuestions] = useState([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
@@ -16,9 +24,12 @@ export default function QuestionnairePanel() {
   const selectedForm = questionnaires.find((q) => q.id === selectedFormId);
 
   useEffect(() => {
+    setCheckedIds(new Set());
+  }, [selectedFormId]);
+
+  useEffect(() => {
     if (!selectedFormId) {
       setQuestions([]);
-      setCheckedIds(new Set());
       return undefined;
     }
 
@@ -31,7 +42,6 @@ export default function QuestionnairePanel() {
         const list = await getFormQuestions(selectedFormId);
         if (!cancelled) {
           setQuestions(list);
-          setCheckedIds(new Set());
         }
       } catch (err) {
         if (!cancelled) {
@@ -49,7 +59,7 @@ export default function QuestionnairePanel() {
     return () => {
       cancelled = true;
     };
-  }, [selectedFormId, getFormQuestions]);
+  }, [selectedFormId, getFormQuestions, questionsRevision]);
 
   const checkedQuestions = useMemo(
     () => questions.filter((question) => checkedIds.has(question.id)),
@@ -120,13 +130,25 @@ export default function QuestionnairePanel() {
             </div>
           )}
 
-          {questionsLoading && <p className="questionnaire-status">Loading questions...</p>}
+          {questionsLoading && !questions.length && (
+            <p className="questionnaire-status">Loading questions...</p>
+          )}
           {questionsError && (
             <p className="questionnaire-status questionnaire-status--error">{questionsError}</p>
           )}
 
-          {!questionsLoading && !questionsError && selectedFormId && questions.length > 0 && (
+          {!questionsError && selectedFormId && questions.length > 0 && (
             <>
+              {questionsRefreshing && (
+                <p className="questionnaire-status questionnaire-status--refreshing">
+                  <span className="questionnaire-spinner" aria-hidden="true" />
+                  Refreshing questions...
+                </p>
+              )}
+
+              <div
+                className={`questionnaire-question-list-wrap${questionsRefreshing ? ' questionnaire-question-list-wrap--refreshing' : ''}`}
+              >
               <div className="questionnaire-actions">
                 <button type="button" className="questionnaire-action-btn" onClick={toggleAll}>
                   {checkedIds.size === questions.length ? 'Deselect all' : 'Select all'}
@@ -143,7 +165,14 @@ export default function QuestionnairePanel() {
 
               <ul className="questionnaire-question-list">
                 {questions.map((question) => (
-                  <li key={question.id} className="questionnaire-question-item">
+                  <li
+                    key={question.id}
+                    className={`questionnaire-question-item${
+                      lastSavedQuestionId === question.id
+                        ? ' questionnaire-question-item--saved'
+                        : ''
+                    }`}
+                  >
                     <input
                       type="checkbox"
                       className="questionnaire-question-check"
@@ -158,12 +187,13 @@ export default function QuestionnairePanel() {
                     >
                       <span className="questionnaire-question-label">{question.label}</span>
                       <span className="questionnaire-question-meta">
-                        {question.questionId} · {question.type}
+                        {question.questionId} · v{question.version} · {question.type}
                       </span>
                     </div>
                   </li>
                 ))}
               </ul>
+              </div>
             </>
           )}
 

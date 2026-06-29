@@ -10,7 +10,7 @@
 
 .publish-modal {
   background: #2d2d2d;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 24px;
   width: 90%;
   max-width: 480px;
@@ -41,7 +41,7 @@
   font-size: 12px;
   background: #1a1a1a;
   border: 1px solid #555;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: #e8e8e8;
 }
 
@@ -51,7 +51,7 @@
   font-weight: 600;
   color: #fff;
   background: var(--color-primary);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
 }
 
@@ -74,10 +74,61 @@
   font-size: 13px;
   color: #aaa;
   background: #3d3d3d;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .publish-modal-close:hover {
   color: #fff;
   background: #4a4a4a;
+}
+
+.save-page-modal-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 6px;
+}
+
+.save-page-modal-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+.save-page-modal-error {
+  font-size: 12px;
+  color: #fc8181;
+  margin-bottom: 12px;
+}
+
+.save-page-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.save-page-modal-cancel {
+  flex: 1;
+}
+
+.save-page-modal-submit {
+  flex: 1;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.save-page-modal-submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.save-page-modal-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

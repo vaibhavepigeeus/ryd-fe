@@ -14,6 +14,9 @@ import FormQuestionElement from '../elements/FormQuestionElement';
 import SectionElement from '../elements/SectionElement';
 import DividerElement from '../elements/DividerElement';
 import SpacerElement from '../elements/SpacerElement';
+import MapElement from '../elements/MapElement';
+import TableElement from '../elements/TableElement';
+import SocialIconsElement from '../elements/SocialIconsElement';
 
 const RENDERERS = {
   [COMPONENT_TYPES.TITLE]: TitleElement,
@@ -27,6 +30,9 @@ const RENDERERS = {
   [COMPONENT_TYPES.SECTION]: SectionElement,
   [COMPONENT_TYPES.DIVIDER]: DividerElement,
   [COMPONENT_TYPES.SPACER]: SpacerElement,
+  [COMPONENT_TYPES.MAP]: MapElement,
+  [COMPONENT_TYPES.TABLE]: TableElement,
+  [COMPONENT_TYPES.SOCIAL_ICONS]: SocialIconsElement,
 };
 
 function wrapWithSize(element, content) {
@@ -43,7 +49,12 @@ function wrapWithSize(element, content) {
   );
 }
 
-export default function PublishedElementRenderer({ element, answers, onAnswerChange }) {
+export default function PublishedElementRenderer({
+  element,
+  answers,
+  onAnswerChange,
+  submitting = false,
+}) {
   const Component = RENDERERS[element.type];
   if (!Component) return null;
 
@@ -66,6 +77,13 @@ export default function PublishedElementRenderer({ element, answers, onAnswerCha
         answers={answers}
         onAnswerChange={onAnswerChange}
       />
+    );
+  }
+
+  if (element.type === COMPONENT_TYPES.BUTTON) {
+    return wrapWithSize(
+      element,
+      <Component element={element} submitting={submitting} />
     );
   }
 

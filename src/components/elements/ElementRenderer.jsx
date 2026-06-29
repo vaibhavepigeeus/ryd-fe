@@ -10,6 +10,9 @@ import FormQuestionElement from './FormQuestionElement';
 import SectionElement from './SectionElement';
 import DividerElement from './DividerElement';
 import SpacerElement from './SpacerElement';
+import MapElement from './MapElement';
+import TableElement from './TableElement';
+import SocialIconsElement from './SocialIconsElement';
 
 const RENDERERS = {
   [COMPONENT_TYPES.TITLE]: TitleElement,
@@ -23,6 +26,9 @@ const RENDERERS = {
   [COMPONENT_TYPES.SECTION]: SectionElement,
   [COMPONENT_TYPES.DIVIDER]: DividerElement,
   [COMPONENT_TYPES.SPACER]: SpacerElement,
+  [COMPONENT_TYPES.MAP]: MapElement,
+  [COMPONENT_TYPES.TABLE]: TableElement,
+  [COMPONENT_TYPES.SOCIAL_ICONS]: SocialIconsElement,
 };
 
 export default function ElementRenderer({ element, isSelected }) {

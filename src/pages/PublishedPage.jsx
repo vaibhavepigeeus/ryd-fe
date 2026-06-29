@@ -120,23 +120,18 @@ export default function PublishedPage({ slug }) {
           </header>
 
           <div className="published-content">
+            {submitError && <p className="published-submit-error">{submitError}</p>}
             {elements.map((element) => (
               <div key={element.id} className="published-element">
                 <PublishedElementRenderer
                   element={element}
                   answers={answers[element.id] || {}}
                   onAnswerChange={(fieldId, value) => updateAnswer(element.id, fieldId, value)}
+                  submitting={submitting}
                 />
               </div>
             ))}
           </div>
-
-          <footer className="published-submit-bar">
-            {submitError && <p className="published-submit-error">{submitError}</p>}
-            <button type="submit" className="published-submit-btn" disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit Form'}
-            </button>
-          </footer>
         </div>
       </form>
     </div>

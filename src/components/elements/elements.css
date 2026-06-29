@@ -1,0 +1,137 @@
+/* Canvas content typography — base layout only; styles come from formatting props */
+.el-title,
+.el-text {
+  outline: none;
+  min-height: 1.2em;
+  line-height: 1.4;
+}
+
+.el-image-wrap {
+  width: 100%;
+}
+
+.el-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.el-button-wrap {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.el-button {
+  display: inline-block;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  outline: none;
+  cursor: default;
+}
+
+.el-button--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.el-form {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.el-form-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.el-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.el-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.el-form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.el-form-required {
+  color: #e53e3e;
+  margin-left: 2px;
+}
+
+.el-form-input {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+  color: #333;
+}
+
+.el-form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.el-form-submit {
+  margin-top: 16px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+.el-newsletter-row {
+  display: flex;
+  gap: 8px;
+}
+
+.el-newsletter-row .el-form-input {
+  flex: 1;
+}
+
+.el-newsletter-row .el-form-submit {
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.el-section {
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  min-height: 80px;
+}
+
+.el-section-placeholder {
+  text-align: center;
+  color: #a0aec0;
+  font-size: 13px;
+}
+
+.el-divider {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 16px 0;
+}
+
+.el-spacer {
+  width: 100%;
+}

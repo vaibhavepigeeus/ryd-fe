@@ -1,0 +1,76 @@
+.el-questionnaire {
+  max-width: 100%;
+  padding: 8px 0;
+}
+
+.el-questionnaire-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.el-questionnaire-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.el-questionnaire-section {
+  margin-bottom: 28px;
+}
+
+.el-questionnaire-section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.el-questionnaire-required-note {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.el-questionnaire-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.el-questionnaire-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.el-questionnaire-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+}
+
+.el-questionnaire-asterisk {
+  color: #e53e3e;
+}
+
+.el-questionnaire-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  font-size: 14px;
+  background: #fff;
+  color: #333;
+  resize: vertical;
+}
+
+.el-questionnaire-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}

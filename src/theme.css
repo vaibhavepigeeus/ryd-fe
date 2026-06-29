@@ -1,0 +1,6 @@
+:root {
+  --color-primary: #9a3470;
+  --color-primary-dark: #7a2a5a;
+  --color-primary-light: rgba(154, 52, 112, 0.25);
+  --color-primary-hover: #b03d84;
+}

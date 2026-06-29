@@ -1,0 +1,127 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 12px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.topbar-exit {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.topbar-exit:hover {
+  background: #3d3d3d;
+  color: #fff;
+}
+
+.topbar-logo {
+  width: 28px;
+  height: 28px;
+  background: var(--color-primary);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.topbar-tab {
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #aaa;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.topbar-tab:hover {
+  color: #fff;
+  background: #3d3d3d;
+}
+
+.topbar-tab.active {
+  color: #fff;
+  background: #3d3d3d;
+}
+
+.topbar-help {
+  color: #888;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 120px;
+  justify-content: flex-end;
+}
+
+.preview-toggle {
+  display: flex;
+  background: #1a1a1a;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.preview-toggle button {
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+.preview-toggle button.active {
+  opacity: 1;
+  background: #3d3d3d;
+}
+
+.btn-upgrade {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #e67e22;
+  border-radius: 4px;
+}
+
+.btn-upgrade:hover {
+  background: #d35400;
+}
+
+.btn-publish {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+.btn-publish:hover {
+  background: var(--color-primary-dark);
+}

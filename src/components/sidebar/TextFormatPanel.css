@@ -1,0 +1,147 @@
+.text-format-panel {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.text-format-panel--empty {
+  margin-bottom: 16px;
+}
+
+.panel-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.text-format-hint,
+.text-format-element-type {
+  font-size: 11px;
+  color: #888;
+  line-height: 1.4;
+  padding: 0 4px;
+}
+
+.text-format-element-type {
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.format-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.format-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3d3d3d;
+  border-radius: 4px;
+  color: #ddd;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.format-btn:hover {
+  background: #4a4a4a;
+  color: #fff;
+}
+
+.format-btn.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.format-underline {
+  text-decoration: underline;
+}
+
+.format-divider {
+  width: 1px;
+  height: 20px;
+  background: #555;
+  margin: 0 4px;
+}
+
+.format-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: #aaa;
+}
+
+.format-field select {
+  padding: 7px 8px;
+  font-size: 11px;
+  color: #e8e8e8;
+  background: #2d2d2d;
+  border: 1px solid #555;
+  border-radius: 4px;
+}
+
+.format-field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid #666;
+  cursor: pointer;
+}
+
+.color-swatch.active {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.color-picker {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.format-preview {
+  margin-top: 4px;
+  padding: 10px;
+  background: #2d2d2d;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+.format-preview-label {
+  display: block;
+  font-size: 10px;
+  color: #777;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.format-preview p {
+  word-break: break-word;
+  line-height: 1.4;
+}

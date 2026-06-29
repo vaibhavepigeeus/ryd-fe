@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
-import { fetchQuestionnaires, fetchQuestionnaireById } from '../services/questionnaireApi';
+import {
+  fetchQuestionnaires,
+  fetchQuestionnaireById,
+  fetchFormQuestions,
+} from '../services/questionnaireApi';
 
 const QuestionnaireContext = createContext(null);
 
@@ -45,9 +49,18 @@ export function QuestionnaireProvider({ children }) {
     return data;
   }, []);
 
+  const getFormQuestions = useCallback(async (formTypeId) => {
+    const cacheKey = `questions-${formTypeId}`;
+    if (cacheRef.current[cacheKey]) return cacheRef.current[cacheKey];
+
+    const data = await fetchFormQuestions(formTypeId);
+    cacheRef.current[cacheKey] = data;
+    return data;
+  }, []);
+
   return (
     <QuestionnaireContext.Provider
-      value={{ questionnaires, loading, error, getQuestionnaire }}
+      value={{ questionnaires, loading, error, getQuestionnaire, getFormQuestions }}
     >
       {children}
     </QuestionnaireContext.Provider>

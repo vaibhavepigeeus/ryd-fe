@@ -10,6 +10,7 @@ import ButtonElement from '../elements/ButtonElement';
 import ContactFormElement from '../elements/ContactFormElement';
 import NewsletterFormElement from '../elements/NewsletterFormElement';
 import QuestionnaireElement from '../elements/QuestionnaireElement';
+import FormQuestionElement from '../elements/FormQuestionElement';
 import SectionElement from '../elements/SectionElement';
 import DividerElement from '../elements/DividerElement';
 import SpacerElement from '../elements/SpacerElement';
@@ -22,6 +23,7 @@ const RENDERERS = {
   [COMPONENT_TYPES.CONTACT_FORM]: ContactFormElement,
   [COMPONENT_TYPES.NEWSLETTER_FORM]: NewsletterFormElement,
   [COMPONENT_TYPES.QUESTIONNAIRE]: QuestionnaireElement,
+  [COMPONENT_TYPES.FORM_QUESTION]: FormQuestionElement,
   [COMPONENT_TYPES.SECTION]: SectionElement,
   [COMPONENT_TYPES.DIVIDER]: DividerElement,
   [COMPONENT_TYPES.SPACER]: SpacerElement,
@@ -49,6 +51,7 @@ export default function PublishedElementRenderer({ element, answers, onAnswerCha
     COMPONENT_TYPES.QUESTIONNAIRE,
     COMPONENT_TYPES.CONTACT_FORM,
     COMPONENT_TYPES.NEWSLETTER_FORM,
+    COMPONENT_TYPES.FORM_QUESTION,
   ].includes(element.type);
 
   if (element.type === COMPONENT_TYPES.TITLE || element.type === COMPONENT_TYPES.TEXT) {

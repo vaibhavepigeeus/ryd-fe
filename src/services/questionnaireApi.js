@@ -4,8 +4,9 @@ import { apiFetch } from './apiClient';
  * Questionnaire API — backed by Django forms service.
  *
  * Backend endpoints:
- *   GET /api/forms/types/           → form list
- *   GET /api/forms/types/:id/full/  → nested questionnaire for builder
+ *   GET /api/forms/types/                    → form list
+ *   GET /api/forms/types/:id/full/           → nested questionnaire for the builder
+ *   GET /api/forms/questions/?form_type=:id  → form_questions rows for a form type
  *
  * Set VITE_API_URL in .env when not using the Vite dev proxy (default: /api).
  */
@@ -66,4 +67,26 @@ export async function fetchQuestionnaireById(id) {
       })),
     })),
   };
+}
+
+export async function fetchFormQuestions(formTypeId) {
+  const questions = await apiFetch(`/forms/questions/?form_type=${formTypeId}`);
+
+  if (!Array.isArray(questions)) {
+    throw new Error('Unexpected response from /forms/questions/');
+  }
+
+  return questions
+    .map((question) => ({
+      id: String(question.id),
+      questionId: question.question_id || String(question.id),
+      label: stripHtml(question.question),
+      type: question.answer_type,
+      required: true,
+      sequenceNo: question.sequence_no,
+      subsectionId: question.association_subsection,
+      formTypeId: String(question.form_type),
+      version: String(question.version),
+    }))
+    .sort((a, b) => (a.sequenceNo ?? 0) - (b.sequenceNo ?? 0) || Number(a.id) - Number(b.id));
 }

@@ -49,6 +49,17 @@ export function FormFieldInput({ field, value, onChange, className, id }) {
     );
   }
 
+  if (field.type === 'radio') {
+    return (
+      <input
+        {...commonProps}
+        type="radio"
+        checked={Boolean(value)}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+    );
+  }
+
   return (
     <input
       {...commonProps}

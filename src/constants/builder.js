@@ -11,6 +11,7 @@ export const COMPONENT_TYPES = {
   CONTACT_FORM: 'contact-form',
   NEWSLETTER_FORM: 'newsletter-form',
   QUESTIONNAIRE: 'questionnaire',
+  FORM_QUESTION: 'form-question',
   SECTION: 'section',
   DIVIDER: 'divider',
   SPACER: 'spacer',
@@ -45,6 +46,7 @@ export const NAV_TABS = ['Build', 'Pages', 'Theme', 'Apps', 'Settings'];
 export const DRAG_TYPES = {
   COMPONENT: 'component-type',
   QUESTIONNAIRE: 'questionnaire-id',
+  FORM_QUESTION: 'form-question-data',
 };
 
 export const RESIZABLE_ELEMENT_TYPES = new Set([
@@ -54,6 +56,7 @@ export const RESIZABLE_ELEMENT_TYPES = new Set([
   COMPONENT_TYPES.CONTACT_FORM,
   COMPONENT_TYPES.NEWSLETTER_FORM,
   COMPONENT_TYPES.QUESTIONNAIRE,
+  COMPONENT_TYPES.FORM_QUESTION,
 ]);
 
 export const MIN_ELEMENT_WIDTH = 100;
@@ -139,6 +142,17 @@ export function createElement(type, overrides = {}) {
       width: 480,
       height: null,
     },
+    [COMPONENT_TYPES.FORM_QUESTION]: {
+      sourceQuestionId: '',
+      questionId: '',
+      label: 'Question',
+      fieldType: 'text',
+      required: true,
+      formTypeId: '',
+      answers: {},
+      width: null,
+      height: null,
+    },
     [COMPONENT_TYPES.SECTION]: {
       children: [],
       padding: '2rem',
@@ -166,6 +180,18 @@ export function createQuestionnaireElement(questionnaire) {
     title: questionnaire.title,
     subtitle: questionnaire.subtitle,
     sections: questionnaire.sections,
+    answers: {},
+  });
+}
+
+export function createFormQuestionElement(question) {
+  return createElement(COMPONENT_TYPES.FORM_QUESTION, {
+    sourceQuestionId: question.id,
+    questionId: question.questionId,
+    label: question.label,
+    fieldType: question.type,
+    required: question.required,
+    formTypeId: question.formTypeId,
     answers: {},
   });
 }

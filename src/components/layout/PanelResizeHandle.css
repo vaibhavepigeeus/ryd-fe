@@ -1,0 +1,22 @@
+.panel-resize-handle {
+  flex-shrink: 0;
+  width: 6px;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s;
+  position: relative;
+  z-index: 5;
+}
+
+.panel-resize-handle:hover,
+.panel-resize-handle:active {
+  background: rgba(154, 52, 112, 0.35);
+}
+
+.panel-resize-handle--left {
+  margin-right: -3px;
+}
+
+.panel-resize-handle--right {
+  margin-left: -3px;
+}

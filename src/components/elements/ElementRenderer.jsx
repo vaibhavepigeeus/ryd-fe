@@ -6,6 +6,7 @@ import ButtonElement from './ButtonElement';
 import ContactFormElement from './ContactFormElement';
 import NewsletterFormElement from './NewsletterFormElement';
 import QuestionnaireElement from './QuestionnaireElement';
+import FormQuestionElement from './FormQuestionElement';
 import SectionElement from './SectionElement';
 import DividerElement from './DividerElement';
 import SpacerElement from './SpacerElement';
@@ -18,6 +19,7 @@ const RENDERERS = {
   [COMPONENT_TYPES.CONTACT_FORM]: ContactFormElement,
   [COMPONENT_TYPES.NEWSLETTER_FORM]: NewsletterFormElement,
   [COMPONENT_TYPES.QUESTIONNAIRE]: QuestionnaireElement,
+  [COMPONENT_TYPES.FORM_QUESTION]: FormQuestionElement,
   [COMPONENT_TYPES.SECTION]: SectionElement,
   [COMPONENT_TYPES.DIVIDER]: DividerElement,
   [COMPONENT_TYPES.SPACER]: SpacerElement,

@@ -1,35 +1,111 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useBuilder } from '../../context/BuilderContext';
 import { useQuestionnaires } from '../../context/QuestionnaireContext';
-import { DRAG_TYPES } from '../../constants/builder';
+import { COMPONENT_TYPES, DRAG_TYPES } from '../../constants/builder';
 import './QuestionnairePanel.css';
 
 export default function QuestionnairePanel() {
-  const { questionnaires, loading, error } = useQuestionnaires();
-  const [selectedId, setSelectedId] = useState('');
+  const { dispatch } = useBuilder();
+  const { questionnaires, loading, error, getFormQuestions } = useQuestionnaires();
+  const [selectedFormId, setSelectedFormId] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionsError, setQuestionsError] = useState(null);
+  const [checkedIds, setCheckedIds] = useState(new Set());
 
-  const selected = questionnaires.find((q) => q.id === selectedId);
+  const selectedForm = questionnaires.find((q) => q.id === selectedFormId);
 
-  const handleDragStart = (e, questionnaireId) => {
-    e.dataTransfer.setData(DRAG_TYPES.COMPONENT, 'questionnaire');
-    e.dataTransfer.setData(DRAG_TYPES.QUESTIONNAIRE, questionnaireId);
+  useEffect(() => {
+    if (!selectedFormId) {
+      setQuestions([]);
+      setCheckedIds(new Set());
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    async function loadQuestions() {
+      try {
+        setQuestionsLoading(true);
+        setQuestionsError(null);
+        const list = await getFormQuestions(selectedFormId);
+        if (!cancelled) {
+          setQuestions(list);
+          setCheckedIds(new Set());
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setQuestionsError(err.message || 'Failed to load questions');
+          setQuestions([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setQuestionsLoading(false);
+        }
+      }
+    }
+
+    loadQuestions();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedFormId, getFormQuestions]);
+
+  const checkedQuestions = useMemo(
+    () => questions.filter((question) => checkedIds.has(question.id)),
+    [questions, checkedIds]
+  );
+
+  const toggleQuestion = (questionId) => {
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(questionId)) {
+        next.delete(questionId);
+      } else {
+        next.add(questionId);
+      }
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    if (checkedIds.size === questions.length) {
+      setCheckedIds(new Set());
+      return;
+    }
+    setCheckedIds(new Set(questions.map((question) => question.id)));
+  };
+
+  const handleQuestionDragStart = (e, question) => {
+    e.dataTransfer.setData(DRAG_TYPES.COMPONENT, COMPONENT_TYPES.FORM_QUESTION);
+    e.dataTransfer.setData(DRAG_TYPES.FORM_QUESTION, JSON.stringify(question));
     e.dataTransfer.effectAllowed = 'copy';
+  };
+
+  const handleAddSelected = () => {
+    if (checkedQuestions.length === 0) return;
+    dispatch({
+      type: 'ADD_ELEMENTS',
+      payload: { questions: checkedQuestions },
+    });
+    setCheckedIds(new Set());
   };
 
   return (
     <div className="questionnaire-panel">
       <h3 className="panel-section-label">QUESTIONNAIRES</h3>
 
-      {loading && <p className="questionnaire-status">Loading...</p>}
+      {loading && <p className="questionnaire-status">Loading forms...</p>}
       {error && <p className="questionnaire-status questionnaire-status--error">{error}</p>}
 
       {!loading && !error && (
         <>
           <select
             className="questionnaire-select"
-            value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
+            value={selectedFormId}
+            onChange={(e) => setSelectedFormId(e.target.value)}
           >
-            <option value="">Select a questionnaire</option>
+            <option value="">Select a form</option>
             {questionnaires.map((q) => (
               <option key={q.id} value={q.id}>
                 {q.subtitle || q.title}
@@ -37,21 +113,67 @@ export default function QuestionnairePanel() {
             ))}
           </select>
 
-          {selected ? (
-            <div
-              className="questionnaire-drag-item"
-              draggable
-              onDragStart={(e) => handleDragStart(e, selected.id)}
-            >
-              <span className="questionnaire-drag-icon">📋</span>
-              <div className="questionnaire-drag-info">
-                <span className="questionnaire-drag-title">{selected.title}</span>
-                <span className="questionnaire-drag-subtitle">{selected.subtitle}</span>
-              </div>
+          {selectedForm && (
+            <div className="questionnaire-form-summary">
+              <span className="questionnaire-form-summary-title">{selectedForm.title}</span>
+              <span className="questionnaire-form-summary-subtitle">{selectedForm.subtitle}</span>
             </div>
-          ) : (
+          )}
+
+          {questionsLoading && <p className="questionnaire-status">Loading questions...</p>}
+          {questionsError && (
+            <p className="questionnaire-status questionnaire-status--error">{questionsError}</p>
+          )}
+
+          {!questionsLoading && !questionsError && selectedFormId && questions.length > 0 && (
+            <>
+              <div className="questionnaire-actions">
+                <button type="button" className="questionnaire-action-btn" onClick={toggleAll}>
+                  {checkedIds.size === questions.length ? 'Deselect all' : 'Select all'}
+                </button>
+                <button
+                  type="button"
+                  className="questionnaire-action-btn questionnaire-action-btn--primary"
+                  onClick={handleAddSelected}
+                  disabled={checkedQuestions.length === 0}
+                >
+                  Add selected ({checkedQuestions.length})
+                </button>
+              </div>
+
+              <ul className="questionnaire-question-list">
+                {questions.map((question) => (
+                  <li key={question.id} className="questionnaire-question-item">
+                    <input
+                      type="checkbox"
+                      className="questionnaire-question-check"
+                      checked={checkedIds.has(question.id)}
+                      onChange={() => toggleQuestion(question.id)}
+                    />
+                    <div
+                      className="questionnaire-question-drag"
+                      draggable
+                      onDragStart={(e) => handleQuestionDragStart(e, question)}
+                      title="Drag onto the page"
+                    >
+                      <span className="questionnaire-question-label">{question.label}</span>
+                      <span className="questionnaire-question-meta">
+                        {question.questionId} · {question.type}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {!questionsLoading && !questionsError && selectedFormId && questions.length === 0 && (
+            <p className="questionnaire-hint">No questions found for this form.</p>
+          )}
+
+          {!selectedFormId && (
             <p className="questionnaire-hint">
-              Choose a questionnaire above, then drag it onto the page
+              Choose a form to load questions from form_questions, then select or drag them onto the page
             </p>
           )}
         </>

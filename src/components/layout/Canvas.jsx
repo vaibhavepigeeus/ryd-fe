@@ -40,9 +40,20 @@ export default function Canvas() {
     e.preventDefault();
     const type = e.dataTransfer.getData(DRAG_TYPES.COMPONENT);
     const questionnaireId = e.dataTransfer.getData(DRAG_TYPES.QUESTIONNAIRE);
+    const formQuestionData = e.dataTransfer.getData(DRAG_TYPES.FORM_QUESTION);
     const index = dropIndex ?? state.elements.length;
 
-    if (type === COMPONENT_TYPES.QUESTIONNAIRE && questionnaireId) {
+    if (type === COMPONENT_TYPES.FORM_QUESTION && formQuestionData) {
+      try {
+        const question = JSON.parse(formQuestionData);
+        dispatch({
+          type: 'ADD_ELEMENT',
+          payload: { question, index },
+        });
+      } catch {
+        // ignore invalid drag payload
+      }
+    } else if (type === COMPONENT_TYPES.QUESTIONNAIRE && questionnaireId) {
       try {
         const questionnaire = await getQuestionnaire(questionnaireId);
         dispatch({

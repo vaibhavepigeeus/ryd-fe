@@ -20,7 +20,8 @@
 .element-sized .el-text,
 .element-sized .el-image-wrap,
 .element-sized .el-form,
-.element-sized .el-questionnaire {
+.element-sized .el-questionnaire,
+.element-sized .el-form-question {
   width: 100%;
   max-width: none;
   margin: 0;
@@ -31,7 +32,8 @@
 .element-sized--height .el-text,
 .element-sized--height .el-image-wrap,
 .element-sized--height .el-form,
-.element-sized--height .el-questionnaire {
+.element-sized--height .el-questionnaire,
+.element-sized--height .el-form-question {
   height: 100%;
 }
 
@@ -48,7 +50,8 @@
 .element-sized--height .el-form,
 .element-sized--height .el-questionnaire,
 .element-sized--height .el-title,
-.element-sized--height .el-text {
+.element-sized--height .el-text,
+.element-sized--height .el-form-question {
   overflow: auto;
 }
 

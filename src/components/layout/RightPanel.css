@@ -1,5 +1,4 @@
 .right-panel {
-  width: 220px;
   flex-shrink: 0;
   background: #333;
   border-left: 1px solid #1a1a1a;

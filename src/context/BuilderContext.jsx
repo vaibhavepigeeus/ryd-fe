@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react';
-import { createElement, createQuestionnaireElement, COMPONENT_TYPES } from '../constants/builder';
+import { createElement, createQuestionnaireElement, createFormQuestionElement, COMPONENT_TYPES } from '../constants/builder';
 import { DEFAULT_TITLE_FORMATTING } from '../constants/textFormatting';
 
 const BuilderContext = createContext(null);
@@ -33,13 +33,29 @@ function updateElementProps(elements, id, updates) {
 function builderReducer(state, action) {
   switch (action.type) {
     case 'ADD_ELEMENT': {
-      const newEl = action.payload.questionnaire
-        ? createQuestionnaireElement(action.payload.questionnaire)
-        : createElement(action.payload.type);
+      const newEl = action.payload.question
+        ? createFormQuestionElement(action.payload.question)
+        : action.payload.questionnaire
+          ? createQuestionnaireElement(action.payload.questionnaire)
+          : createElement(action.payload.type);
       const index = action.payload.index ?? state.elements.length;
       const elements = [...state.elements];
       elements.splice(index, 0, newEl);
       return { ...state, elements, selectedId: newEl.id };
+    }
+
+    case 'ADD_ELEMENTS': {
+      const index = action.payload.index ?? state.elements.length;
+      const newElements = action.payload.questions.map((question) =>
+        createFormQuestionElement(question)
+      );
+      const elements = [...state.elements];
+      elements.splice(index, 0, ...newElements);
+      return {
+        ...state,
+        elements,
+        selectedId: newElements[newElements.length - 1]?.id ?? state.selectedId,
+      };
     }
 
     case 'REMOVE_ELEMENT':

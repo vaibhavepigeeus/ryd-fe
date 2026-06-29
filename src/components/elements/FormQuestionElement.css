@@ -1,0 +1,44 @@
+.el-form-question {
+  width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+.el-form-question-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.el-form-question-label-text {
+  outline: none;
+}
+
+.el-form-question-label-text:focus {
+  background: rgba(154, 52, 112, 0.06);
+  border-radius: 2px;
+}
+
+.el-form-question-required {
+  color: #e53e3e;
+}
+
+.el-form-question-input {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  font-size: 14px;
+  background: #fff;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.el-form-question-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}

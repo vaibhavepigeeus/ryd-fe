@@ -71,6 +71,38 @@ export const RESIZABLE_ELEMENT_TYPES = new Set([
 export const MIN_ELEMENT_WIDTH = 100;
 export const MIN_ELEMENT_HEIGHT = 60;
 
+export const DEFAULT_TABLE_ROWS = 3;
+export const DEFAULT_TABLE_COLS = 4;
+export const MIN_TABLE_ROWS = 1;
+export const MIN_TABLE_COLS = 1;
+export const MAX_TABLE_ROWS = 20;
+export const MAX_TABLE_COLS = 12;
+
+export function createTableCells(
+  rows = DEFAULT_TABLE_ROWS,
+  cols = DEFAULT_TABLE_COLS
+) {
+  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => ''));
+}
+
+export function resizeTableCells(cells, newRows, newCols) {
+  const currentRows = cells.length;
+  const currentCols = cells[0]?.length ?? 0;
+  return Array.from({ length: newRows }, (_, rowIndex) =>
+    Array.from({ length: newCols }, (_, colIndex) =>
+      rowIndex < currentRows && colIndex < currentCols
+        ? (cells[rowIndex][colIndex] ?? '')
+        : ''
+    )
+  );
+}
+
+export function clampTableDimension(value, min, max) {
+  const parsed = Number.parseInt(String(value), 10);
+  if (Number.isNaN(parsed)) return min;
+  return Math.min(max, Math.max(min, parsed));
+}
+
 export function isResizableElement(type) {
   return RESIZABLE_ELEMENT_TYPES.has(type);
 }
@@ -185,7 +217,7 @@ export function createElement(type, overrides = {}) {
       width: null,
     },
     [COMPONENT_TYPES.TABLE]: {
-      cells: Array.from({ length: 3 }, () => Array.from({ length: 4 }, () => '')),
+      cells: createTableCells(DEFAULT_TABLE_ROWS, DEFAULT_TABLE_COLS),
       width: null,
       height: null,
     },

@@ -103,7 +103,7 @@
   position: fixed;
   left: -10000px;
   top: 0;
-  width: 900px;
+  width: 794px;
   background: #fff;
   z-index: -1;
   pointer-events: none;
@@ -113,10 +113,51 @@
   box-shadow: none;
   border-radius: 0;
   min-height: auto;
+  max-width: none;
+  width: 794px;
+}
+
+.response-pdf-container .response-pdf-block {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.response-pdf-container .response-detail-element {
+  margin: 0 0 16px;
+  padding: 0 24px;
 }
 
 .response-pdf-container .response-detail-content {
   color: #1a1a1a;
+  padding: 16px 0 24px;
+}
+
+.response-pdf-container .canvas-header--branded {
+  padding: 16px 24px;
+}
+
+.response-pdf-container .el-form-question {
+  padding: 4px 0 8px;
+}
+
+.response-pdf-container .el-form-question-label {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1a1a1a;
+}
+
+.response-pdf-container .el-response-value {
+  min-height: 40px;
+  background: #f8fafc;
+  border-color: #dbe3ec;
+}
+
+.response-pdf-container .el-response-value--multiline {
+  min-height: 72px;
+}
+
+.response-pdf-container .el-table-cell-text--filled {
+  min-height: 36px;
 }
 
 .response-detail-content {

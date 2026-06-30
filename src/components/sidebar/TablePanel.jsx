@@ -16,12 +16,7 @@ export default function TablePanel() {
   const isTable = selected?.type === COMPONENT_TYPES.TABLE;
 
   if (!isTable) {
-    return (
-      <div className="table-panel table-panel--empty">
-        <h3 className="panel-section-label">TABLE</h3>
-        <p className="table-panel-hint">Select a Table block to change rows and columns</p>
-      </div>
-    );
+    return null;
   }
 
   const { cells = [] } = selected.props;

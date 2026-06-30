@@ -1,12 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
 import { useBuilderOptional } from '../../hooks/useBuilderOptional';
+import { stopFormInteraction } from './FormFieldInput';
 import './elements.css';
 
-export default function TableElement({ element, isSelected }) {
+function getCellKey(rowIndex, colIndex) {
+  return `${rowIndex}-${colIndex}`;
+}
+
+function isFillableCell(cell) {
+  return !String(cell ?? '').trim();
+}
+
+export default function TableElement({
+  element,
+  isSelected,
+  answers = {},
+  onAnswerChange,
+  readOnly = false,
+}) {
   const builder = useBuilderOptional();
   const { cells = [] } = element.props;
   const [editingCell, setEditingCell] = useState(null);
   const cellRefs = useRef({});
+
+  const isPublished = !builder && (onAnswerChange || readOnly);
 
   useEffect(() => {
     if (!isSelected) {
@@ -39,6 +56,42 @@ export default function TableElement({ element, isSelected }) {
       payload: { id: element.id, props: { cells: nextCells } },
     });
     setEditingCell(null);
+  };
+
+  const renderPublishedCell = (rowIndex, colIndex, templateCell) => {
+    const cellKey = getCellKey(rowIndex, colIndex);
+    const fillable = isFillableCell(templateCell);
+
+    if (!fillable) {
+      return (
+        <span className="el-table-cell-text el-table-cell-text--static">
+          {templateCell}
+        </span>
+      );
+    }
+
+    if (readOnly) {
+      const value = answers[cellKey];
+      return (
+        <span className="el-table-cell-text el-table-cell-text--static el-table-cell-text--filled">
+          {value || '\u00a0'}
+        </span>
+      );
+    }
+
+    return (
+      <input
+        type="text"
+        className="el-table-cell-input"
+        value={answers[cellKey] ?? ''}
+        placeholder=""
+        aria-label={`Row ${rowIndex + 1}, column ${colIndex + 1}`}
+        onChange={(e) => onAnswerChange(cellKey, e.target.value)}
+        onClick={stopFormInteraction}
+        onMouseDown={stopFormInteraction}
+        onFocus={stopFormInteraction}
+      />
+    );
   };
 
   return (
@@ -74,10 +127,14 @@ export default function TableElement({ element, isSelected }) {
                           }
                         }}
                       >
-                        {cell}
+                        {cell || '\u00a0'}
                       </span>
+                    ) : isPublished ? (
+                      renderPublishedCell(rowIndex, colIndex, cell)
                     ) : (
-                      cell
+                      <span className="el-table-cell-text el-table-cell-text--static">
+                        {cell || '\u00a0'}
+                      </span>
                     )}
                   </td>
                 );

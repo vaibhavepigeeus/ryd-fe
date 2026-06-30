@@ -30,14 +30,7 @@ export default function QuestionOptionsPanel() {
   const isFormQuestion = selected?.type === COMPONENT_TYPES.FORM_QUESTION;
 
   if (!isFormQuestion) {
-    return (
-      <div className="question-options-panel question-options-panel--empty">
-        <h3 className="panel-section-label">ANSWER OPTIONS</h3>
-        <p className="question-options-hint">
-          Select a question on the page to edit its answer options
-        </p>
-      </div>
-    );
+    return null;
   }
 
   const { fieldType, options = [], checkboxLabel = 'Yes', questionId, answers = {} } =
@@ -46,14 +39,7 @@ export default function QuestionOptionsPanel() {
   const showCheckboxLabel = hasCheckboxLabel(fieldType);
 
   if (!showMultiOptions && !showCheckboxLabel) {
-    return (
-      <div className="question-options-panel question-options-panel--empty">
-        <h3 className="panel-section-label">ANSWER OPTIONS</h3>
-        <p className="question-options-hint">
-          {getQuestionTypeLabel(fieldType)} questions do not use answer options
-        </p>
-      </div>
-    );
+    return null;
   }
 
   const updateProps = (props) => {

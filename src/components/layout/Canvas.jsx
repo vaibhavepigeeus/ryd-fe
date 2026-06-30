@@ -81,7 +81,6 @@ export default function Canvas() {
 
     setIsDraggingOver(false);
     setDropIndex(null);
-    console.log('questionType', questionType);
   };
 
   const handleElementDragOver = (e, index) => {

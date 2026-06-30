@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NAV_TABS } from '../../constants/builder';
 import { useBuilder } from '../../context/BuilderContext';
+import { useAuth } from '../../context/AuthContext';
 import {
   getPublishedPageUrl,
   publishPage,
@@ -9,6 +10,22 @@ import {
 import SavePageModal from './SavePageModal';
 import './PublishModal.css';
 import './TopBar.css';
+
+function TopBarUser() {
+  const { user, logout } = useAuth();
+
+  if (!user) return null;
+
+  return (
+    <div className="topbar-user">
+      <span className="topbar-user-name">{user.user_name}</span>
+      <span className="topbar-user-role">{user.role}</span>
+      <button type="button" className="topbar-logout" onClick={logout}>
+        Log out
+      </button>
+    </div>
+  );
+}
 
 function PublishModal({ url, onClose }) {
   const [copied, setCopied] = useState(false);
@@ -45,7 +62,7 @@ function PublishModal({ url, onClose }) {
   );
 }
 
-export default function TopBar() {
+export default function TopBar({ onExit }) {
   const { state, dispatch } = useBuilder();
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -129,7 +146,12 @@ export default function TopBar() {
     <>
       <header className="topbar">
         <div className="topbar-left">
-          <button className="topbar-exit" type="button" aria-label="Exit editor">
+          <button
+            className="topbar-exit"
+            type="button"
+            aria-label="Exit editor"
+            onClick={onExit}
+          >
             ✕
           </button>
           <div className="topbar-logo">R</div>
@@ -162,6 +184,7 @@ export default function TopBar() {
               {state.saveMessage}
             </span>
           )}
+          <TopBarUser />
           <div className="preview-toggle">
             <button
               type="button"

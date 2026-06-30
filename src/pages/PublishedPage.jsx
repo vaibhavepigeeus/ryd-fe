@@ -3,7 +3,10 @@ import {
   fetchPublishedPage,
   submitPublishedPage,
 } from '../services/pageApi';
+import { downloadPublishedSubmissionPdf, buildSubmissionPayload } from '../utils/downloadResponsePdf';
+import ResponsePageContent from '../components/responses/ResponsePageContent';
 import PublishedElementRenderer from '../components/published/PublishedElementRenderer';
+import '../components/responses/ResponseDetailView.css';
 import '../components/layout/Canvas.css';
 import './PublishedPage.css';
 
@@ -15,6 +18,8 @@ export default function PublishedPage({ slug }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [downloading, setDownloading] = useState(false);
+  const [successView, setSuccessView] = useState('thankyou');
 
   useEffect(() => {
     let cancelled = false;
@@ -71,6 +76,19 @@ export default function PublishedPage({ slug }) {
     }
   };
 
+  const handleDownload = async () => {
+    if (!page) return;
+
+    try {
+      setDownloading(true);
+      await downloadPublishedSubmissionPdf(page, answers);
+    } catch (err) {
+      window.alert(err.message || 'Failed to download PDF');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="published-page published-page--centered">
@@ -89,12 +107,63 @@ export default function PublishedPage({ slug }) {
     );
   }
 
+  if (submitted && successView === 'response') {
+    const submission = buildSubmissionPayload(page, answers);
+    const pageTitle = page.page_name || page.layout_data?.pageTitle || 'Your response';
+
+    return (
+      <div className="published-page published-submitted-view">
+        <div className="published-submitted-toolbar">
+          <button
+            type="button"
+            className="published-submitted-back"
+            onClick={() => setSuccessView('thankyou')}
+          >
+            ← Back
+          </button>
+          <span className="published-submitted-title">{pageTitle}</span>
+          <button
+            type="button"
+            className="published-submitted-download"
+            onClick={handleDownload}
+            disabled={downloading}
+          >
+            {downloading ? 'Preparing PDF...' : 'Download PDF'}
+          </button>
+        </div>
+
+        <div className="published-submitted-canvas-wrap">
+          <div className="published-submitted-page">
+            <ResponsePageContent submission={submission} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (submitted) {
     return (
       <div className="published-page published-page--centered">
         <div className="published-success">
           <h1>Thank you!</h1>
           <p>Your response has been submitted successfully.</p>
+          <div className="published-success-actions">
+            <button
+              type="button"
+              className="published-success-view"
+              onClick={() => setSuccessView('response')}
+            >
+              View response
+            </button>
+            <button
+              type="button"
+              className="published-success-download"
+              onClick={handleDownload}
+              disabled={downloading}
+            >
+              {downloading ? 'Preparing PDF...' : 'Download PDF'}
+            </button>
+          </div>
         </div>
       </div>
     );

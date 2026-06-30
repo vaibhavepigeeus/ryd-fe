@@ -6,6 +6,7 @@ export default function NewsletterFormElement({
   element,
   answers: externalAnswers,
   onAnswerChange,
+  readOnly = false,
 }) {
   const builder = useBuilderOptional();
   const { title, placeholder, submitLabel, answers: storedAnswers = {} } = element.props;
@@ -43,8 +44,10 @@ export default function NewsletterFormElement({
           onClick={stopFormInteraction}
           onMouseDown={stopFormInteraction}
           onFocus={stopFormInteraction}
+          readOnly={readOnly}
+          disabled={readOnly}
         />
-        {!onAnswerChange && (
+        {!readOnly && !onAnswerChange && (
           <button
             type="button"
             className="el-form-submit"

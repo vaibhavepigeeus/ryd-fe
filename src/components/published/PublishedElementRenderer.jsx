@@ -54,6 +54,7 @@ export default function PublishedElementRenderer({
   answers,
   onAnswerChange,
   submitting = false,
+  readOnly = false,
 }) {
   const Component = RENDERERS[element.type];
   if (!Component) return null;
@@ -75,7 +76,8 @@ export default function PublishedElementRenderer({
       <Component
         element={element}
         answers={answers}
-        onAnswerChange={onAnswerChange}
+        onAnswerChange={readOnly ? undefined : onAnswerChange}
+        readOnly={readOnly}
       />
     );
   }
@@ -83,9 +85,9 @@ export default function PublishedElementRenderer({
   if (element.type === COMPONENT_TYPES.BUTTON) {
     return wrapWithSize(
       element,
-      <Component element={element} submitting={submitting} />
+      <Component element={element} submitting={submitting} readOnly={readOnly} />
     );
   }
 
-  return wrapWithSize(element, <Component element={element} />);
+  return wrapWithSize(element, <Component element={element} readOnly={readOnly} />);
 }

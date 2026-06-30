@@ -1,0 +1,95 @@
+.responses-screen .responses-count-badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-primary);
+  background: #fdf5f9;
+  border: 1px solid #f0d4e4;
+  border-radius: 999px;
+}
+
+.responses-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.responses-list-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.responses-list-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 16px 18px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.responses-list-item:hover:not(:disabled) {
+  border-color: #d6bcfa;
+  box-shadow: 0 4px 14px rgba(154, 52, 112, 0.08);
+  transform: translateY(-1px);
+}
+
+.responses-list-item:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.responses-list-item-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.responses-list-item-date {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.responses-list-item-action {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.responses-download-btn {
+  flex-shrink: 0;
+  align-self: stretch;
+  min-width: 72px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.responses-download-btn:hover:not(:disabled) {
+  color: #fff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.responses-download-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}

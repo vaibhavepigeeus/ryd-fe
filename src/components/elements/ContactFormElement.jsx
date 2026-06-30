@@ -6,6 +6,7 @@ export default function ContactFormElement({
   element,
   answers: externalAnswers,
   onAnswerChange,
+  readOnly = false,
 }) {
   const builder = useBuilderOptional();
   const { title, fields, submitLabel, answers: storedAnswers = {} } = element.props;
@@ -45,11 +46,12 @@ export default function ContactFormElement({
               value={answers[field.id]}
               onChange={(value) => handleAnswerChange(field.id, value)}
               className="el-form-input"
+              readOnly={readOnly}
             />
           </div>
         ))}
       </div>
-      {!onAnswerChange && (
+      {!readOnly && !onAnswerChange && (
         <button
           type="button"
           className="el-form-submit"

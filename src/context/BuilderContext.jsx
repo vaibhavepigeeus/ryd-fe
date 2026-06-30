@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { createElement, createQuestionnaireElement, createFormQuestionElement } from '../constants/builder';
+import { createElement, createQuestionnaireElement, createFormQuestionElement, createDraftFormQuestionElement } from '../constants/builder';
 import { loadPage } from '../services/pageApi';
 
 const LAST_PAGE_ID_KEY = 'ryd:lastPageId';
@@ -31,11 +31,13 @@ function updateElementProps(elements, id, updates) {
 function builderReducer(state, action) {
   switch (action.type) {
     case 'ADD_ELEMENT': {
-      const newEl = action.payload.question
-        ? createFormQuestionElement(action.payload.question)
-        : action.payload.questionnaire
-          ? createQuestionnaireElement(action.payload.questionnaire)
-          : createElement(action.payload.type);
+      const newEl = action.payload.draftQuestionType
+        ? createDraftFormQuestionElement(action.payload.draftQuestionType)
+        : action.payload.question
+          ? createFormQuestionElement(action.payload.question)
+          : action.payload.questionnaire
+            ? createQuestionnaireElement(action.payload.questionnaire)
+            : createElement(action.payload.type);
       const index = action.payload.index ?? state.elements.length;
       const elements = [...state.elements];
       elements.splice(index, 0, newEl);

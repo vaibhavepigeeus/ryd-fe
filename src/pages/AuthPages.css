@@ -1,0 +1,307 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(145deg, #f8f4f6 0%, #efe4ea 100%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  padding: 32px;
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-brand-logo {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.auth-brand h1 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+}
+
+.auth-brand p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.auth-field input,
+.auth-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.auth-field input:focus,
+.auth-field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.auth-role-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.auth-role-option {
+  border: 2px solid #e5e5e5;
+  border-radius: var(--radius-md);
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+  background: #fff;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.auth-role-option:hover {
+  border-color: var(--color-primary-light);
+}
+
+.auth-role-option.selected {
+  border-color: var(--color-primary);
+  background: rgba(154, 52, 112, 0.06);
+}
+
+.auth-role-option strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.auth-role-option span {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.auth-submit {
+  margin-top: 8px;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-error {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: #fdecea;
+  color: #b42318;
+  font-size: 0.85rem;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.auth-footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.coachee-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.coachee-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.coachee-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.coachee-header-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.coachee-header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.coachee-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.coachee-user-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.coachee-logout-btn {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: var(--radius-md);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.coachee-logout-btn:hover {
+  background: #f5f5f5;
+}
+
+.coachee-main {
+  flex: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.coachee-welcome-card {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-soft);
+}
+
+.coachee-welcome-card h2 {
+  margin: 0 0 8px;
+}
+
+.coachee-welcome-card p {
+  margin: 0 0 16px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.coachee-coach-info {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: #f8f4f6;
+  font-size: 0.9rem;
+}
+
+.auth-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 8px;
+}
+
+.topbar-user-name {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.topbar-user-role {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(154, 52, 112, 0.25);
+  color: #e8b4d4;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.topbar-logout {
+  padding: 6px 12px;
+  border: 1px solid #555;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #ccc;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.topbar-logout:hover {
+  background: #333;
+  color: #fff;
+}

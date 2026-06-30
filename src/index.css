@@ -24,6 +24,12 @@ body:has(.published-page) {
   background: #fff;
 }
 
+body:has(.coach-layout) {
+  overflow: auto;
+  background: #f6f6f6;
+  color: #1a1a1a;
+}
+
 .app {
   height: 100vh;
   overflow: hidden;

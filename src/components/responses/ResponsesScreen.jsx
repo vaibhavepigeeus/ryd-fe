@@ -23,16 +23,16 @@ function formatDate(value) {
 }
 
 function getPageTitle(page) {
-  return page.page_name || 'Untitled form';
+  return page?.page_name || 'Untitled form';
 }
 
-export default function ResponsesScreen() {
-  const [view, setView] = useState('forms');
+export default function ResponsesScreen({ initialPageId = null, onBackToAll = null }) {
+  const [view, setView] = useState(initialPageId ? 'loading' : 'forms');
   const [pages, setPages] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [selectedPage, setSelectedPage] = useState(null);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(initialPageId));
   const [error, setError] = useState(null);
   const [downloadingId, setDownloadingId] = useState(null);
 
@@ -42,21 +42,17 @@ export default function ResponsesScreen() {
       setError(null);
       const list = await fetchPagesWithResponses();
       setPages(list);
+      return list;
     } catch (err) {
       setError(err.message || 'Failed to load forms');
       setPages([]);
+      return [];
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    if (view === 'forms') {
-      loadPages();
-    }
-  }, [view, loadPages]);
-
-  const openPage = async (page) => {
+  const openPage = useCallback(async (page) => {
     try {
       setLoading(true);
       setError(null);
@@ -69,7 +65,36 @@ export default function ResponsesScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (view === 'forms') {
+      loadPages();
+    }
+  }, [view, loadPages]);
+
+  useEffect(() => {
+    if (!initialPageId) return;
+
+    let active = true;
+
+    (async () => {
+      const list = await loadPages();
+      if (!active) return;
+
+      const page = list.find((item) => Number(item.id) === Number(initialPageId));
+      if (page) {
+        await openPage(page);
+      } else {
+        setError('Form not found');
+        setView('forms');
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [initialPageId, loadPages, openPage]);
 
   const openSubmission = async (submission) => {
     try {
@@ -86,6 +111,11 @@ export default function ResponsesScreen() {
   };
 
   const backToForms = () => {
+    if (onBackToAll) {
+      onBackToAll();
+      return;
+    }
+
     setView('forms');
     setSelectedPage(null);
     setSubmissions([]);
@@ -169,11 +199,13 @@ export default function ResponsesScreen() {
               </div>
             )}
           </>
+        ) : view === 'loading' ? (
+          <p className="page-start-status">Loading responses...</p>
         ) : (
           <>
             <header className="page-start-header page-start-header--list">
               <button type="button" className="page-start-back" onClick={backToForms}>
-                ← All forms
+                {onBackToAll ? '← Back to dashboard' : '← All forms'}
               </button>
               <h1>{getPageTitle(selectedPage)}</h1>
               <p>

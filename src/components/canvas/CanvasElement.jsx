@@ -50,7 +50,6 @@ export default function CanvasElement({ element, index, isSelected }) {
       const startY = e.clientY;
       const startWidth = element.props.width ?? rect.width;
       const startHeight = element.props.height ?? rect.height;
-      console.log(startWidth, startHeight);
 
       const onMouseMove = (moveEvent) => {
         const updates = {};

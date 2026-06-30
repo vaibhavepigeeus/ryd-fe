@@ -15,6 +15,7 @@ export default function FormQuestionElement({
   element,
   answers: externalAnswers,
   onAnswerChange,
+  readOnly = false,
 }) {
   const builder = useBuilderOptional();
   const questionnaires = useQuestionnairesOptional();
@@ -31,6 +32,8 @@ export default function FormQuestionElement({
     sourceQuestionId,
     formTypeId,
     version,
+    options = [],
+    checkboxLabel = 'Yes',
     answers: storedAnswers = {},
   } = element.props;
   const answers = externalAnswers ?? storedAnswers;
@@ -178,6 +181,8 @@ export default function FormQuestionElement({
     label,
     type: fieldType,
     required,
+    options,
+    checkboxLabel,
   };
 
   const inputId = `${element.id}-${questionId}`;
@@ -208,7 +213,7 @@ export default function FormQuestionElement({
             element={labelElement}
             tag="span"
             className="el-form-question-label-text"
-            readOnly={!builder}
+            readOnly={readOnly || !builder}
             textField="label"
             htmlField="labelHtml"
             formattingField="labelFormatting"
@@ -239,6 +244,7 @@ export default function FormQuestionElement({
         value={answerValue}
         onChange={handleAnswerChange}
         className="el-form-question-input"
+        readOnly={readOnly}
       />
     </div>
   );

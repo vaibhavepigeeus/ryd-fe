@@ -132,3 +132,59 @@
   outline: none;
   border-color: var(--color-primary);
 }
+
+.el-form-choice-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+
+.el-form-choice-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  cursor: default;
+  line-height: 1.4;
+}
+
+.el-form-choice-option input {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-primary, #9a3470);
+}
+
+.el-form-choice-option span {
+  flex: 1;
+  min-width: 0;
+}
+
+.el-form-choice-group--readonly {
+  pointer-events: none;
+}
+
+.el-response-value {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #1a1a1a;
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+
+.el-response-value--multiline {
+  min-height: 96px;
+  white-space: pre-wrap;
+}

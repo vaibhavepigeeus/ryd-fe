@@ -67,4 +67,127 @@
 .published-success p {
   color: #555;
   font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.published-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.published-success-view,
+.published-success-download {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.published-success-view {
+  color: var(--color-primary);
+  background: #fff;
+  border: 1px solid var(--color-primary);
+}
+
+.published-success-view:hover {
+  background: #fdf5f9;
+}
+
+.published-success-download {
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+}
+
+.published-success-download:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.published-success-download:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.published-submitted-view {
+  min-height: 100vh;
+  background: #e8e8e8;
+  display: flex;
+  flex-direction: column;
+}
+
+.published-submitted-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.published-submitted-back {
+  flex-shrink: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.published-submitted-back:hover {
+  text-decoration: underline;
+}
+
+.published-submitted-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.published-submitted-download {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.published-submitted-download:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.published-submitted-download:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.published-submitted-canvas-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.published-submitted-page {
+  width: 100%;
+  max-width: 900px;
+  pointer-events: none;
+  user-select: text;
 }

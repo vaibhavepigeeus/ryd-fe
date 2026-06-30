@@ -4,6 +4,7 @@ import { QuestionnaireProvider } from './context/QuestionnaireContext';
 import TopBar from './components/layout/TopBar';
 import Sidebar from './components/layout/Sidebar';
 import PageStartScreen from './components/layout/PageStartScreen';
+import ResponsesScreen from './components/responses/ResponsesScreen';
 import Canvas from './components/layout/Canvas';
 import RightPanel from './components/layout/RightPanel';
 import PanelResizeHandle from './components/layout/PanelResizeHandle';
@@ -32,15 +33,23 @@ function AppBody() {
   }, []);
 
   const showStartScreen = state.activeTab === 'Pages';
+  const showResponsesScreen = state.activeTab === 'Responses';
+  const showBuilderChrome = !showStartScreen && !showResponsesScreen;
 
   return (
     <div className="app">
       <TopBar />
       <div className="app-body">
-        <Sidebar width={sidebarWidth} />
-        <PanelResizeHandle side="left" onResize={resizeSidebar} />
-        {showStartScreen ? <PageStartScreen /> : <Canvas />}
-        {!showStartScreen && (
+        {showBuilderChrome && <Sidebar width={sidebarWidth} />}
+        {showBuilderChrome && <PanelResizeHandle side="left" onResize={resizeSidebar} />}
+        {showStartScreen ? (
+          <PageStartScreen />
+        ) : showResponsesScreen ? (
+          <ResponsesScreen />
+        ) : (
+          <Canvas />
+        )}
+        {showBuilderChrome && (
           <>
             <PanelResizeHandle side="right" onResize={resizeRightPanel} />
             <RightPanel width={rightPanelWidth} />

@@ -3,6 +3,7 @@ import {
   DEFAULT_TITLE_FORMATTING,
   contentToHtml,
 } from './textFormatting';
+import { getDefaultOptionsForType } from './questionTypes';
 
 export const COMPONENT_TYPES = {
   TITLE: 'title',
@@ -48,12 +49,13 @@ export const PALETTE_SECTIONS = [
   },
 ];
 
-export const NAV_TABS = ['Build', 'Pages', 'Theme', 'Apps', 'Settings'];
+export const NAV_TABS = ['Build', 'Pages', 'Responses', 'Theme', 'Apps', 'Settings'];
 
 export const DRAG_TYPES = {
   COMPONENT: 'component-type',
   QUESTIONNAIRE: 'questionnaire-id',
   FORM_QUESTION: 'form-question-data',
+  QUESTION_TYPE: 'question-type',
 };
 
 export const RESIZABLE_ELEMENT_TYPES = new Set([
@@ -193,8 +195,10 @@ export function createElement(type, overrides = {}) {
       labelFormatting: { ...DEFAULT_TEXT_FORMATTING },
       version: '',
       fieldType: 'text',
-      required: true,
+      required: false,
       formTypeId: '',
+      options: [],
+      checkboxLabel: 'Yes',
       answers: {},
       width: null,
       height: null,
@@ -266,6 +270,31 @@ export function createFormQuestionElement(question) {
     fieldType: question.type,
     required: question.required,
     formTypeId: question.formTypeId,
+    options: question.options || getDefaultOptionsForType(question.type),
+    answers: {},
+  });
+}
+
+export function createDraftFormQuestionElement(answerType) {
+  const labelFormatting = { ...DEFAULT_TEXT_FORMATTING };
+  const label = 'Enter your question';
+  const labelHtml = contentToHtml(label, labelFormatting);
+  const draftId = `draft-${crypto.randomUUID()}`;
+
+  return createElement(COMPONENT_TYPES.FORM_QUESTION, {
+    sourceQuestionId: '',
+    questionId: draftId,
+    label,
+    savedLabel: '',
+    labelHtml,
+    savedLabelHtml: '',
+    labelFormatting,
+    version: '',
+    fieldType: answerType,
+    required: false,
+    formTypeId: '',
+    options: getDefaultOptionsForType(answerType),
+    checkboxLabel: answerType === 'checkbox' ? 'Yes' : '',
     answers: {},
   });
 }

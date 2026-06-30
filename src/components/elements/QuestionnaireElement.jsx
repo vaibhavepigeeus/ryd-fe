@@ -11,6 +11,7 @@ export default function QuestionnaireElement({
   element,
   answers: externalAnswers,
   onAnswerChange,
+  readOnly = false,
 }) {
   const builder = useBuilderOptional();
   const { title, subtitle, sections, answers: storedAnswers = {} } = element.props;
@@ -61,6 +62,7 @@ export default function QuestionnaireElement({
                   value={getQuestionnaireFieldAnswer(answers, fieldKey, field.id)}
                   onChange={(value) => handleAnswerChange(fieldKey, value)}
                   className="el-questionnaire-input"
+                  readOnly={readOnly}
                 />
               </div>
               );

@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { useBuilder } from '../../context/BuilderContext';
 import { useQuestionnaires } from '../../context/QuestionnaireContext';
 import { DRAG_TYPES, COMPONENT_TYPES } from '../../constants/builder';
+import { QUESTION_ANSWER_TYPES } from '../../constants/questionTypes';
 import CanvasElement from '../canvas/CanvasElement';
 import './Canvas.css';
+
+const VALID_QUESTION_TYPES = new Set(QUESTION_ANSWER_TYPES.map((item) => item.type));
 
 export default function Canvas() {
   const { state, dispatch } = useBuilder();
@@ -41,9 +44,15 @@ export default function Canvas() {
     const type = e.dataTransfer.getData(DRAG_TYPES.COMPONENT);
     const questionnaireId = e.dataTransfer.getData(DRAG_TYPES.QUESTIONNAIRE);
     const formQuestionData = e.dataTransfer.getData(DRAG_TYPES.FORM_QUESTION);
+    const questionType = e.dataTransfer.getData(DRAG_TYPES.QUESTION_TYPE);
     const index = dropIndex ?? state.elements.length;
 
-    if (type === COMPONENT_TYPES.FORM_QUESTION && formQuestionData) {
+    if (type === COMPONENT_TYPES.FORM_QUESTION && questionType && VALID_QUESTION_TYPES.has(questionType)) {
+      dispatch({
+        type: 'ADD_ELEMENT',
+        payload: { draftQuestionType: questionType, index },
+      });
+    } else if (type === COMPONENT_TYPES.FORM_QUESTION && formQuestionData) {
       try {
         const question = JSON.parse(formQuestionData);
         dispatch({

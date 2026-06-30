@@ -1,6 +1,13 @@
 import { createRoot } from 'react-dom/client';
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import ResponsePageContent from '../components/responses/ResponsePageContent';
+
+const PDF_MARGIN_MM = 12;
+const BLOCK_GAP_MM = 4;
+const PAGE_WIDTH_MM = 210;
+const PAGE_HEIGHT_MM = 297;
+const CONTENT_WIDTH_MM = PAGE_WIDTH_MM - PDF_MARGIN_MM * 2;
 
 function slugify(value) {
   return String(value || 'response')
@@ -14,7 +21,7 @@ function waitForRender() {
   return new Promise((resolve) => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        setTimeout(resolve, 250);
+        setTimeout(resolve, 300);
       });
     });
   });
@@ -43,6 +50,88 @@ export async function downloadPublishedSubmissionPdf(page, answers) {
   return downloadResponsePdf(buildSubmissionPayload(page, answers));
 }
 
+async function captureBlock(element) {
+  return html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    backgroundColor: '#ffffff',
+    width: element.scrollWidth,
+    height: element.scrollHeight,
+  });
+}
+
+function canvasToHeightMm(canvas) {
+  return (canvas.height * CONTENT_WIDTH_MM) / canvas.width;
+}
+
+function addCanvasSlice(pdf, canvas, sourceY, sliceHeightPx, destYMm) {
+  const sliceCanvas = document.createElement('canvas');
+  sliceCanvas.width = canvas.width;
+  sliceCanvas.height = sliceHeightPx;
+
+  const ctx = sliceCanvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
+  ctx.drawImage(
+    canvas,
+    0,
+    sourceY,
+    canvas.width,
+    sliceHeightPx,
+    0,
+    0,
+    canvas.width,
+    sliceHeightPx
+  );
+
+  const sliceHeightMm = (sliceHeightPx * CONTENT_WIDTH_MM) / canvas.width;
+  const imgData = sliceCanvas.toDataURL('image/jpeg', 0.92);
+  pdf.addImage(imgData, 'JPEG', PDF_MARGIN_MM, destYMm, CONTENT_WIDTH_MM, sliceHeightMm);
+  return sliceHeightMm;
+}
+
+function addBlockToPdf(pdf, canvas, yPosition) {
+  const maxContentHeight = PAGE_HEIGHT_MM - PDF_MARGIN_MM * 2;
+  const fullHeightMm = canvasToHeightMm(canvas);
+
+  if (fullHeightMm <= maxContentHeight) {
+    if (yPosition + fullHeightMm > PAGE_HEIGHT_MM - PDF_MARGIN_MM) {
+      pdf.addPage();
+      yPosition = PDF_MARGIN_MM;
+    }
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    pdf.addImage(imgData, 'JPEG', PDF_MARGIN_MM, yPosition, CONTENT_WIDTH_MM, fullHeightMm);
+    return yPosition + fullHeightMm + BLOCK_GAP_MM;
+  }
+
+  const sliceHeightPx = Math.floor((maxContentHeight / fullHeightMm) * canvas.height);
+  let sourceY = 0;
+
+  while (sourceY < canvas.height) {
+    const remainingPx = canvas.height - sourceY;
+    const currentSlicePx = Math.min(sliceHeightPx, remainingPx);
+    const currentSliceMm = (currentSlicePx * CONTENT_WIDTH_MM) / canvas.width;
+
+    if (yPosition + currentSliceMm > PAGE_HEIGHT_MM - PDF_MARGIN_MM && yPosition > PDF_MARGIN_MM) {
+      pdf.addPage();
+      yPosition = PDF_MARGIN_MM;
+    }
+
+    const drawnHeightMm = addCanvasSlice(pdf, canvas, sourceY, currentSlicePx, yPosition);
+    sourceY += currentSlicePx;
+    yPosition += drawnHeightMm;
+
+    if (sourceY < canvas.height) {
+      pdf.addPage();
+      yPosition = PDF_MARGIN_MM;
+    }
+  }
+
+  return yPosition + BLOCK_GAP_MM;
+}
+
 export async function downloadResponsePdf(submission) {
   if (!submission?.page?.layout_data) {
     throw new Error('Response page layout is not available');
@@ -58,9 +147,14 @@ export async function downloadResponsePdf(submission) {
     root.render(<ResponsePageContent submission={submission} />);
     await waitForRender();
 
-    const target = container.querySelector('.response-pdf-page');
-    if (!target) {
+    const pageRoot = container.querySelector('.response-pdf-page');
+    if (!pageRoot) {
       throw new Error('Could not prepare response for PDF export');
+    }
+
+    const blocks = pageRoot.querySelectorAll('.response-pdf-block');
+    if (!blocks.length) {
+      throw new Error('Could not prepare response blocks for PDF export');
     }
 
     const pageTitle =
@@ -69,23 +163,16 @@ export async function downloadResponsePdf(submission) {
       'form';
 
     const filename = `${slugify(pageTitle)}-response-${submission.id}.pdf`;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
-    await html2pdf()
-      .set({
-        margin: [8, 8, 8, 8],
-        filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff',
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] },
-      })
-      .from(target)
-      .save();
+    let yPosition = PDF_MARGIN_MM;
+
+    for (const block of blocks) {
+      const canvas = await captureBlock(block);
+      yPosition = addBlockToPdf(pdf, canvas, yPosition);
+    }
+
+    pdf.save(filename);
   } finally {
     root.unmount();
     container.remove();

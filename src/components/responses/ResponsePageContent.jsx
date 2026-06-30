@@ -11,7 +11,7 @@ export default function ResponsePageContent({ submission }) {
 
   return (
     <div className="canvas-page response-pdf-page">
-      <header className="canvas-header canvas-header--branded">
+      <header className="canvas-header canvas-header--branded response-pdf-block">
         <div className="canvas-header-brand">JYOTI GULATI</div>
         <nav className="canvas-header-nav">
           <span>HOME</span>
@@ -25,10 +25,10 @@ export default function ResponsePageContent({ submission }) {
 
       <div className="canvas-content response-detail-content">
         {elements.length === 0 ? (
-          <p className="response-detail-empty">This form has no content.</p>
+          <p className="response-detail-empty response-pdf-block">This form has no content.</p>
         ) : (
           elements.map((element) => (
-            <div key={element.id} className="response-detail-element">
+            <div key={element.id} className="response-detail-element response-pdf-block">
               <PublishedElementRenderer
                 element={element}
                 answers={getElementAnswers(element, responseData)}

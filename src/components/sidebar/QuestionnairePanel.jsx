@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useBuilder } from '../../context/BuilderContext';
 import { useQuestionnaires } from '../../context/QuestionnaireContext';
 import { COMPONENT_TYPES, DRAG_TYPES } from '../../constants/builder';
 import './QuestionnairePanel.css';
 
 export default function QuestionnairePanel() {
-  const { dispatch } = useBuilder();
   const {
     questionnaires,
     loading,
@@ -19,12 +17,12 @@ export default function QuestionnairePanel() {
   const [questions, setQuestions] = useState([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionsError, setQuestionsError] = useState(null);
-  const [checkedIds, setCheckedIds] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
 
   const selectedForm = questionnaires.find((q) => q.id === selectedFormId);
 
   useEffect(() => {
-    setCheckedIds(new Set());
+    setSearchQuery('');
   }, [selectedFormId]);
 
   useEffect(() => {
@@ -61,44 +59,22 @@ export default function QuestionnairePanel() {
     };
   }, [selectedFormId, getFormQuestions, questionsRevision]);
 
-  const checkedQuestions = useMemo(
-    () => questions.filter((question) => checkedIds.has(question.id)),
-    [questions, checkedIds]
-  );
+  const filteredQuestions = useMemo(() => {
+    const term = searchQuery.trim().toLowerCase();
+    if (!term) return questions;
 
-  const toggleQuestion = (questionId) => {
-    setCheckedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(questionId)) {
-        next.delete(questionId);
-      } else {
-        next.add(questionId);
-      }
-      return next;
-    });
-  };
-
-  const toggleAll = () => {
-    if (checkedIds.size === questions.length) {
-      setCheckedIds(new Set());
-      return;
-    }
-    setCheckedIds(new Set(questions.map((question) => question.id)));
-  };
+    return questions.filter(
+      (question) =>
+        question.label.toLowerCase().includes(term) ||
+        question.questionId.toLowerCase().includes(term) ||
+        question.type.toLowerCase().includes(term)
+    );
+  }, [questions, searchQuery]);
 
   const handleQuestionDragStart = (e, question) => {
     e.dataTransfer.setData(DRAG_TYPES.COMPONENT, COMPONENT_TYPES.FORM_QUESTION);
     e.dataTransfer.setData(DRAG_TYPES.FORM_QUESTION, JSON.stringify(question));
     e.dataTransfer.effectAllowed = 'copy';
-  };
-
-  const handleAddSelected = () => {
-    if (checkedQuestions.length === 0) return;
-    dispatch({
-      type: 'ADD_ELEMENTS',
-      payload: { questions: checkedQuestions },
-    });
-    setCheckedIds(new Set());
   };
 
   return (
@@ -123,11 +99,8 @@ export default function QuestionnairePanel() {
             ))}
           </select>
 
-          {selectedForm && (
-            <div className="questionnaire-form-summary">
-              <span className="questionnaire-form-summary-title">{selectedForm.title}</span>
-              <span className="questionnaire-form-summary-subtitle">{selectedForm.subtitle}</span>
-            </div>
+          {selectedForm?.title && (
+            <p className="questionnaire-form-title">{selectedForm.title}</p>
           )}
 
           {questionsLoading && !questions.length && (
@@ -146,53 +119,64 @@ export default function QuestionnairePanel() {
                 </p>
               )}
 
+              <div className="questionnaire-search-wrap">
+                <input
+                  type="search"
+                  className="questionnaire-search"
+                  placeholder="Search questions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label="Search questions"
+                />
+                {searchQuery.trim() && (
+                  <p className="questionnaire-search-count">
+                    {filteredQuestions.length} of {questions.length} questions
+                  </p>
+                )}
+              </div>
+
               <div
                 className={`questionnaire-question-list-wrap${questionsRefreshing ? ' questionnaire-question-list-wrap--refreshing' : ''}`}
               >
-              <div className="questionnaire-actions">
-                <button type="button" className="questionnaire-action-btn" onClick={toggleAll}>
-                  {checkedIds.size === questions.length ? 'Deselect all' : 'Select all'}
-                </button>
-                <button
-                  type="button"
-                  className="questionnaire-action-btn questionnaire-action-btn--primary"
-                  onClick={handleAddSelected}
-                  disabled={checkedQuestions.length === 0}
-                >
-                  Add selected ({checkedQuestions.length})
-                </button>
-              </div>
-
-              <ul className="questionnaire-question-list">
-                {questions.map((question) => (
-                  <li
-                    key={question.id}
-                    className={`questionnaire-question-item${
-                      lastSavedQuestionId === question.id
-                        ? ' questionnaire-question-item--saved'
-                        : ''
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      className="questionnaire-question-check"
-                      checked={checkedIds.has(question.id)}
-                      onChange={() => toggleQuestion(question.id)}
-                    />
-                    <div
-                      className="questionnaire-question-drag"
-                      draggable
-                      onDragStart={(e) => handleQuestionDragStart(e, question)}
-                      title="Drag onto the page"
-                    >
-                      <span className="questionnaire-question-label">{question.label}</span>
-                      <span className="questionnaire-question-meta">
-                        {question.questionId} · v{question.version} · {question.type}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                {filteredQuestions.length === 0 ? (
+                  <p className="questionnaire-hint">No questions match your search.</p>
+                ) : (
+                  <ul className="questionnaire-question-list">
+                    {filteredQuestions.map((question) => (
+                      <li
+                        key={question.id}
+                        className={`questionnaire-question-item${
+                          lastSavedQuestionId === question.id
+                            ? ' questionnaire-question-item--saved'
+                            : ''
+                        }`}
+                      >
+                        <div
+                          className="questionnaire-question-drag"
+                          draggable
+                          onDragStart={(e) => handleQuestionDragStart(e, question)}
+                          title={question.label}
+                        >
+                          <span className="questionnaire-question-grip" aria-hidden="true">
+                            ⠿
+                          </span>
+                          <div className="questionnaire-question-content">
+                            <span className="questionnaire-question-label">{question.label}</span>
+                            <div className="questionnaire-question-meta">
+                              <span className="questionnaire-question-badge">
+                                {question.questionId}
+                              </span>
+                              <span className="questionnaire-question-badge">
+                                v{question.version}
+                              </span>
+                              <span className="questionnaire-question-badge">{question.type}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </>
           )}
@@ -203,7 +187,7 @@ export default function QuestionnairePanel() {
 
           {!selectedFormId && (
             <p className="questionnaire-hint">
-              Choose a form to load questions from form_questions, then select or drag them onto the page
+              Choose a form to load questions from form_questions, then drag them onto the page
             </p>
           )}
         </>

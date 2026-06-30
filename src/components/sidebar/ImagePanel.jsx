@@ -62,12 +62,7 @@ export default function ImagePanel() {
   };
 
   if (!isImage) {
-    return (
-      <div className="image-panel image-panel--empty">
-        <h3 className="panel-section-label">IMAGE</h3>
-        <p className="image-panel-hint">Select an Image block to upload a file</p>
-      </div>
-    );
+    return null;
   }
 
   return (

@@ -82,6 +82,18 @@ export default function PublishedElementRenderer({
     );
   }
 
+  if (element.type === COMPONENT_TYPES.TABLE) {
+    return wrapWithSize(
+      element,
+      <Component
+        element={element}
+        answers={answers}
+        onAnswerChange={readOnly ? undefined : onAnswerChange}
+        readOnly={readOnly}
+      />
+    );
+  }
+
   if (element.type === COMPONENT_TYPES.BUTTON) {
     return wrapWithSize(
       element,

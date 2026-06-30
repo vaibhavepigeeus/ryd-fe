@@ -348,6 +348,33 @@ button.el-button {
   border-radius: 2px;
 }
 
+.el-table-cell-text--static {
+  min-height: 36px;
+}
+
+.el-table-cell-text--filled {
+  background: #f7fafc;
+}
+
+.el-table-cell-input {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.el-table-cell-input:focus {
+  background: rgba(154, 52, 112, 0.04);
+  box-shadow: inset 0 0 0 2px var(--color-primary-light);
+}
+
 .el-table-wrap--selected .el-table-cell {
   border-color: #d6bcfa;
 }

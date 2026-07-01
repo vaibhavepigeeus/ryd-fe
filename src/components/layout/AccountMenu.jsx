@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { assignCoach, fetchCoaches } from '../../services/coacheesApi';
+import ChangePasswordDialog from './ChangePasswordDialog';
 import './AccountMenu.css';
 
 function getInitials(name) {
@@ -14,6 +15,7 @@ export default function AccountMenu() {
   const { user, logout, isCoachee, refreshAuth } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [coachPopupOpen, setCoachPopupOpen] = useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [coaches, setCoaches] = useState([]);
   const [coachesLoading, setCoachesLoading] = useState(false);
   const [selectedCoachId, setSelectedCoachId] = useState('');
@@ -89,6 +91,11 @@ export default function AccountMenu() {
     await loadCoaches();
   };
 
+  const openChangePassword = () => {
+    closeDropdown();
+    setChangePasswordOpen(true);
+  };
+
   const handleSaveCoach = async () => {
     if (!selectedCoachId) {
       setError('Please select a coach.');
@@ -128,6 +135,9 @@ export default function AccountMenu() {
 
       {dropdownOpen && (
         <div className="account-menu-dropdown" role="menu">
+          <button type="button" className="account-menu-dropdown-item" onClick={openChangePassword}>
+            Change password
+          </button>
           {isCoachee && (
             <button type="button" className="account-menu-dropdown-item" onClick={openCoachPopup}>
               Coach
@@ -138,6 +148,12 @@ export default function AccountMenu() {
           </button>
         </div>
       )}
+
+      <ChangePasswordDialog
+        open={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+        userId={user?.id}
+      />
 
       {coachPopupOpen && (
         <>

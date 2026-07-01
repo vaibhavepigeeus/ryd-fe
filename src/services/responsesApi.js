@@ -17,3 +17,10 @@ export async function fetchPageSubmissions(pageId) {
 export async function fetchSubmissionDetail(submissionId) {
   return apiFetch(`/forms/submissions/${submissionId}/`);
 }
+
+export async function fetchMySubmissions() {
+  const data = await apiFetch('/forms/submissions/mine/');
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.results)) return data.results;
+  return [];
+}

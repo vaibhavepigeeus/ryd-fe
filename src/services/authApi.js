@@ -8,14 +8,13 @@ export async function login(email, password) {
   });
 }
 
-export async function register({ userName, email, password }) {
+export async function register({ userName, email }) {
   return apiFetch('/users/register/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       user_name: userName,
       email,
-      password,
     }),
   });
 }

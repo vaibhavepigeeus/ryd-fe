@@ -6,21 +6,24 @@ export default function RegisterPage({ onNavigate }) {
   const { register } = useAuth();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
+    setSuccessMessage('');
     setSubmitting(true);
 
     try {
-      await register({
+      const data = await register({
         userName: userName.trim(),
         email: email.trim(),
-        password,
       });
+      setSuccessMessage(
+        data.message || 'Account created. A login password has been sent to your email.',
+      );
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
@@ -28,13 +31,41 @@ export default function RegisterPage({ onNavigate }) {
     }
   };
 
+  if (successMessage) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <div className="auth-brand">
+            <div className="auth-brand-logo">R</div>
+            <h1>Check your email</h1>
+            <p>Your account has been created</p>
+          </div>
+
+          <div className="auth-success">{successMessage}</div>
+
+          <p className="auth-footer" style={{ marginTop: 24 }}>
+            <a
+              href="/login"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate('login');
+              }}
+            >
+              Sign in with your emailed password
+            </a>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-brand">
           <div className="auth-brand-logo">R</div>
           <h1>Create your account</h1>
-          <p>Join RYD to get started</p>
+          <p>We&apos;ll email you a login password</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -63,20 +94,6 @@ export default function RegisterPage({ onNavigate }) {
               placeholder="you@example.com"
               required
               autoComplete="email"
-            />
-          </div>
-
-          <div className="auth-field">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 8 characters"
-              required
-              minLength={8}
-              autoComplete="new-password"
             />
           </div>
 

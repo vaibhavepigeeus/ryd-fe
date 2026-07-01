@@ -1,0 +1,31 @@
+.portal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.portal-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portal-header-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.portal-header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}

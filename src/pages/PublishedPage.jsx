@@ -10,7 +10,7 @@ import '../components/responses/ResponseDetailView.css';
 import '../components/layout/Canvas.css';
 import './PublishedPage.css';
 
-export default function PublishedPage({ slug }) {
+export default function PublishedPage({ slug, embedded = false, onBack = null }) {
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,9 +89,14 @@ export default function PublishedPage({ slug }) {
     }
   };
 
+  const pageClass = embedded ? 'published-page published-page--embedded' : 'published-page';
+  const centeredClass = embedded
+    ? 'published-page published-page--embedded published-page--centered'
+    : 'published-page published-page--centered';
+
   if (loading) {
     return (
-      <div className="published-page published-page--centered">
+      <div className={centeredClass}>
         <p className="published-status">Loading form...</p>
       </div>
     );
@@ -99,10 +104,15 @@ export default function PublishedPage({ slug }) {
 
   if (error || !page) {
     return (
-      <div className="published-page published-page--centered">
+      <div className={centeredClass}>
         <p className="published-status published-status--error">
           {error || 'This form is not available.'}
         </p>
+        {onBack && (
+          <button type="button" className="published-success-view" onClick={onBack}>
+            Back to my forms
+          </button>
+        )}
       </div>
     );
   }
@@ -112,7 +122,11 @@ export default function PublishedPage({ slug }) {
     const pageTitle = page.page_name || page.layout_data?.pageTitle || 'Your response';
 
     return (
-      <div className="published-page published-submitted-view">
+      <div
+        className={`published-page published-submitted-view${
+          embedded ? ' published-submitted-view--embedded' : ''
+        }`}
+      >
         <div className="published-submitted-toolbar">
           <button
             type="button"
@@ -143,7 +157,7 @@ export default function PublishedPage({ slug }) {
 
   if (submitted) {
     return (
-      <div className="published-page published-page--centered">
+      <div className={centeredClass}>
         <div className="published-success">
           <h1>Thank you!</h1>
           <p>Your response has been submitted successfully.</p>
@@ -163,6 +177,11 @@ export default function PublishedPage({ slug }) {
             >
               {downloading ? 'Preparing PDF...' : 'Download PDF'}
             </button>
+            {onBack && (
+              <button type="button" className="published-success-view" onClick={onBack}>
+                Back to my forms
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -173,7 +192,7 @@ export default function PublishedPage({ slug }) {
   const elements = layout?.elements || [];
 
   return (
-    <div className="published-page">
+    <div className={pageClass}>
       <form className="published-form" onSubmit={handleSubmit}>
         <div className="published-page-inner">
           <header className="canvas-header canvas-header--branded">

@@ -1,0 +1,9 @@
+.create-coachee-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.create-coachee-modal .save-page-modal-label:not(:first-of-type) {
+  margin-top: 12px;
+}

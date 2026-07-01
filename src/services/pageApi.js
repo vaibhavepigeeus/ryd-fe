@@ -40,6 +40,11 @@ export async function fetchPages() {
   return [];
 }
 
+export async function fetchPublishedPages() {
+  const pages = await fetchPages();
+  return pages.filter((page) => page.is_published);
+}
+
 export async function publishPage(pageId) {
   return apiFetch(`/forms/pages/${pageId}/publish/`, {
     method: 'POST',

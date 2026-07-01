@@ -1,9 +1,7 @@
-import { useAuth } from '../../context/AuthContext';
+import AccountMenu from '../layout/AccountMenu';
 import './CoachLayout.css';
 
 export default function CoachHeader() {
-  const { user, logout } = useAuth();
-
   return (
     <header className="coach-header">
       <div className="coach-header-left">
@@ -12,10 +10,7 @@ export default function CoachHeader() {
       </div>
 
       <div className="coach-header-right">
-        <span className="coach-header-user">{user?.user_name}</span>
-        <button type="button" className="coach-header-logout" onClick={logout}>
-          Log out
-        </button>
+        <AccountMenu />
       </div>
     </header>
   );

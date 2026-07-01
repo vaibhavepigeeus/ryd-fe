@@ -31,6 +31,42 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.coach-coachees-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.coach-coachees-create-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.coach-coachees-create-btn:hover {
+  background: var(--color-primary-hover);
+}
+
+.coach-coachees-create-btn--empty {
+  margin-top: 16px;
+}
+
+.coach-coachees-success {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: #ecfdf3;
+  color: #027a48;
+  font-size: 0.9rem;
 }
 
 .coach-coachees-header h2 {
@@ -102,6 +138,30 @@
 
 .coach-coachees-name {
   font-weight: 500;
+}
+
+.coach-coachees-actions {
+  width: 48px;
+  text-align: right;
+}
+
+.coach-coachees-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+}
+
+.coach-coachees-edit-btn:hover {
+  background: #f3f3f3;
+  color: var(--color-primary);
 }
 
 .coach-coachees-status {

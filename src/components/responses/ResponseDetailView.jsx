@@ -16,7 +16,7 @@ function formatSubmittedAt(value) {
   });
 }
 
-export default function ResponseDetailView({ submission, onBack }) {
+export default function ResponseDetailView({ submission, onBack, backLabel = '← Back to responses' }) {
   const [downloading, setDownloading] = useState(false);
   const page = submission.page;
   const layout = page?.layout_data || {};
@@ -37,7 +37,7 @@ export default function ResponseDetailView({ submission, onBack }) {
     <div className="response-detail-screen">
       <div className="response-detail-toolbar">
         <button type="button" className="response-detail-back" onClick={onBack}>
-          ← Back to responses
+          {backLabel}
         </button>
         <div className="response-detail-meta">
           <span className="response-detail-title">{pageTitle}</span>

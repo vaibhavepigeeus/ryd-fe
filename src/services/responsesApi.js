@@ -24,3 +24,11 @@ export async function fetchMySubmissions() {
   if (Array.isArray(data?.results)) return data.results;
   return [];
 }
+
+export async function updateSubmission(submissionId, responseData) {
+  return apiFetch(`/forms/submissions/${submissionId}/`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(responseData),
+  });
+}

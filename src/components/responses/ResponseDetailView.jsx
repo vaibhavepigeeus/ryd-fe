@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import FormViewToolbar from '../layout/FormViewToolbar';
 import ResponsePageContent from './ResponsePageContent';
 import { downloadResponsePdf } from '../../utils/downloadResponsePdf';
 import './ResponseDetailView.css';
@@ -16,7 +17,7 @@ function formatSubmittedAt(value) {
   });
 }
 
-export default function ResponseDetailView({ submission, onBack, backLabel = '‚Üê Back to responses' }) {
+export default function ResponseDetailView({ submission, onBack, backLabel = 'Back to my forms' }) {
   const [downloading, setDownloading] = useState(false);
   const page = submission.page;
   const layout = page?.layout_data || {};
@@ -35,25 +36,21 @@ export default function ResponseDetailView({ submission, onBack, backLabel = '‚Ü
 
   return (
     <div className="response-detail-screen">
-      <div className="response-detail-toolbar">
-        <button type="button" className="response-detail-back" onClick={onBack}>
-          {backLabel}
-        </button>
-        <div className="response-detail-meta">
-          <span className="response-detail-title">{pageTitle}</span>
-          <span className="response-detail-date">
-            Submitted {formatSubmittedAt(submission.submitted_at)}
-          </span>
-        </div>
+      <FormViewToolbar
+        onBack={onBack}
+        backLabel={backLabel}
+        title={pageTitle}
+        subtitle={`Submitted ${formatSubmittedAt(submission.submitted_at)}`}
+      >
         <button
           type="button"
-          className="response-detail-download"
+          className="form-view-toolbar-btn"
           onClick={handleDownload}
           disabled={downloading}
         >
           {downloading ? 'Downloading...' : 'Download PDF'}
         </button>
-      </div>
+      </FormViewToolbar>
 
       <div className="response-detail-canvas-wrap">
         <div className="response-detail-page">

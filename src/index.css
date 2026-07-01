@@ -30,6 +30,12 @@ body:has(.coach-layout) {
   color: #1a1a1a;
 }
 
+body:has(.coachee-dashboard) {
+  overflow: auto;
+  background: #f0f2f5;
+  color: #1a1a1a;
+}
+
 .app {
   height: 100vh;
   overflow: hidden;

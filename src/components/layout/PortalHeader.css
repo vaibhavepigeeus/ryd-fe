@@ -28,4 +28,6 @@
 .portal-header h1 {
   margin: 0;
   font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
 }

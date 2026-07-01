@@ -1,0 +1,128 @@
+.form-view-toolbar {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px 24px;
+  padding: 14px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.form-view-toolbar-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.form-view-toolbar-back:hover {
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary-light);
+  background: #fdf5f9;
+  box-shadow: 0 2px 8px rgba(154, 52, 112, 0.08);
+}
+
+.form-view-toolbar-back-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-primary);
+}
+
+.form-view-toolbar-back-label {
+  white-space: nowrap;
+}
+
+.form-view-toolbar-center {
+  min-width: 0;
+  text-align: center;
+}
+
+.form-view-toolbar-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.form-view-toolbar-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.form-view-toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.form-view-toolbar-btn {
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.form-view-toolbar-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.form-view-toolbar-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+@media (max-width: 768px) {
+  .form-view-toolbar {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .form-view-toolbar-back {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .form-view-toolbar-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .form-view-toolbar-center {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    text-align: left;
+  }
+
+  .form-view-toolbar-back-label {
+    display: none;
+  }
+
+  .form-view-toolbar-back {
+    padding: 8px 12px;
+  }
+}

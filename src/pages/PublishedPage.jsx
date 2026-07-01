@@ -1,16 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import {
   fetchPublishedPage,
   submitPublishedPage,
 } from '../services/pageApi';
+import { updateSubmission } from '../services/responsesApi';
 import { downloadPublishedSubmissionPdf, buildSubmissionPayload } from '../utils/downloadResponsePdf';
+import { clearFormDraft, loadFormDraft, saveFormDraft } from '../utils/formDraftStorage';
+import { responseDataToAnswers } from '../utils/responseData';
 import ResponsePageContent from '../components/responses/ResponsePageContent';
+import FormViewToolbar from '../components/layout/FormViewToolbar';
 import PublishedElementRenderer from '../components/published/PublishedElementRenderer';
 import '../components/responses/ResponseDetailView.css';
 import '../components/layout/Canvas.css';
 import './PublishedPage.css';
 
-export default function PublishedPage({ slug, embedded = false, onBack = null }) {
+export default function PublishedPage({
+  slug,
+  embedded = false,
+  onBack = null,
+  editSubmission = null,
+}) {
+  const { user } = useAuth();
+  const isEditing = Boolean(editSubmission?.id);
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,6 +32,7 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
   const [submitError, setSubmitError] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [successView, setSuccessView] = useState('thankyou');
+  const saveTimeoutRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,7 +42,15 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
         setLoading(true);
         setError(null);
         const data = await fetchPublishedPage(slug);
-        if (!cancelled) setPage(data);
+        if (!cancelled) {
+          setPage(data);
+          if (isEditing && editSubmission?.response_data) {
+            setAnswers(responseDataToAnswers(editSubmission.response_data));
+          } else {
+            const draft = user?.id ? loadFormDraft(user.id, data.id) : null;
+            setAnswers(draft?.answers || {});
+          }
+        }
       } catch (err) {
         if (!cancelled) setError(err.message || 'Page not found');
       } finally {
@@ -41,7 +62,58 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, user?.id, isEditing, editSubmission]);
+
+  useEffect(() => {
+    if (!user?.id || !page?.id || submitted || isEditing) return undefined;
+
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    saveTimeoutRef.current = setTimeout(() => {
+      saveFormDraft(user.id, page.id, answers);
+    }, 400);
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [answers, page?.id, submitted, user?.id, isEditing]);
+
+  const buildResponsePayload = () => ({
+    pageTitle: page.layout_data?.pageTitle,
+    answers,
+    elements: page.layout_data?.elements?.map((el) => ({
+      id: el.id,
+      type: el.type,
+      answers: answers[el.id] || {},
+    })),
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const payload = buildResponsePayload();
+      if (isEditing) {
+        await updateSubmission(editSubmission.id, payload);
+      } else {
+        await submitPublishedPage(slug, payload);
+      }
+      if (user?.id && page?.id) {
+        clearFormDraft(user.id, page.id);
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err.message || `Failed to ${isEditing ? 'update' : 'submit'} form`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const updateAnswer = (elementId, fieldId, value) => {
     setAnswers((prev) => ({
@@ -51,29 +123,6 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
         [fieldId]: value,
       },
     }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setSubmitError(null);
-
-    try {
-      await submitPublishedPage(slug, {
-        pageTitle: page.layout_data?.pageTitle,
-        answers,
-        elements: page.layout_data?.elements?.map((el) => ({
-          id: el.id,
-          type: el.type,
-          answers: answers[el.id] || {},
-        })),
-      });
-      setSubmitted(true);
-    } catch (err) {
-      setSubmitError(err.message || 'Failed to submit form');
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   const handleDownload = async () => {
@@ -118,7 +167,11 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
   }
 
   if (submitted && successView === 'response') {
-    const submission = buildSubmissionPayload(page, answers);
+    const submission = buildSubmissionPayload(
+      page,
+      answers,
+      isEditing ? editSubmission.id : null,
+    );
     const pageTitle = page.page_name || page.layout_data?.pageTitle || 'Your response';
 
     return (
@@ -127,24 +180,20 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
           embedded ? ' published-submitted-view--embedded' : ''
         }`}
       >
-        <div className="published-submitted-toolbar">
+        <FormViewToolbar
+          onBack={() => setSuccessView('thankyou')}
+          backLabel="Back"
+          title={pageTitle}
+        >
           <button
             type="button"
-            className="published-submitted-back"
-            onClick={() => setSuccessView('thankyou')}
-          >
-            ← Back
-          </button>
-          <span className="published-submitted-title">{pageTitle}</span>
-          <button
-            type="button"
-            className="published-submitted-download"
+            className="form-view-toolbar-btn"
             onClick={handleDownload}
             disabled={downloading}
           >
             {downloading ? 'Preparing PDF...' : 'Download PDF'}
           </button>
-        </div>
+        </FormViewToolbar>
 
         <div className="published-submitted-canvas-wrap">
           <div className="published-submitted-page">
@@ -159,8 +208,12 @@ export default function PublishedPage({ slug, embedded = false, onBack = null })
     return (
       <div className={centeredClass}>
         <div className="published-success">
-          <h1>Thank you!</h1>
-          <p>Your response has been submitted successfully.</p>
+          <h1>{isEditing ? 'Response updated!' : 'Thank you!'}</h1>
+          <p>
+            {isEditing
+              ? 'Your response has been updated successfully.'
+              : 'Your response has been submitted successfully.'}
+          </p>
           <div className="published-success-actions">
             <button
               type="button"

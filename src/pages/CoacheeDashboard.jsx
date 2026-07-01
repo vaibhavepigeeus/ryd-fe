@@ -8,6 +8,7 @@ import { fetchPublishedPages } from '../services/pageApi';
 import { downloadResponsePdf } from '../utils/downloadResponsePdf';
 import { loadFormDraft } from '../utils/formDraftStorage';
 import PublishedPage from './PublishedPage';
+import '../components/admin/AdminLayout.css';
 import './CoacheeDashboard.css';
 
 function formatPageDate(value) {
@@ -53,7 +54,7 @@ const EMPTY_FILTER_MESSAGES = {
   all: 'No assessments to show.',
   submitted: 'No submitted assessments yet.',
   draft: 'No drafts — start a form and your progress will be saved automatically.',
-  pending: 'You\'re all caught up — no assessments waiting to start.',
+  pending: "You're all caught up — no assessments waiting to start.",
 };
 
 function FormCardSkeleton() {
@@ -376,10 +377,7 @@ export default function CoacheeDashboard() {
       <div className="coachee-dashboard">
         <PortalHeader title="RYD Coachee Portal" />
         <main className="coachee-main coachee-main--form">
-          <ResponseDetailView
-            submission={selectedSubmission}
-            onBack={handleBackToHome}
-          />
+          <ResponseDetailView submission={selectedSubmission} onBack={handleBackToHome} />
         </main>
       </div>
     );
@@ -413,15 +411,17 @@ export default function CoacheeDashboard() {
       <PortalHeader title="RYD Coachee Portal" />
 
       <main className="coachee-main">
-        <section className="coachee-hero">
-          <div className="coachee-hero-content">
-            <h2>Hello, {firstName}!</h2>
-            <p className="coachee-hero-subtitle">
-              Complete the assessments shared by your coach.
+        <section className="admin-hero coachee-hero-banner">
+          <div className="admin-hero-content">
+            <span className="admin-hero-eyebrow">Coachee dashboard</span>
+            <h1>Welcome back, {firstName}</h1>
+            <p className="admin-hero-subtitle">
+              Complete the assessments shared by your coach. Track your progress and
+              review submitted responses below.
             </p>
           </div>
           {!loading && pages.length > 0 && (
-            <div className="coachee-hero-stats">
+            <div className="coachee-hero-stats coachee-hero-stats--on-dark">
               <span className="coachee-hero-stat coachee-hero-stat--submitted">
                 <strong>{submittedForms.length}</strong> submitted
               </span>
@@ -436,7 +436,7 @@ export default function CoacheeDashboard() {
           {!loading && firstDraft && (
             <button
               type="button"
-              className="coachee-hero-cta"
+              className="coachee-hero-cta coachee-hero-cta--on-dark"
               onClick={() => handleOpenForm(firstDraft.page)}
             >
               Continue your draft — {getPageTitle(firstDraft.page)}

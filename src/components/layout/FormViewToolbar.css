@@ -14,27 +14,31 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  font-size: 13px;
+  padding: 9px 16px;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #4a5568;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  color: #1a1a1a;
+  background: #fff;
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  border-radius: 10px;
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04);
+  transition: color 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s,
+    transform 0.15s;
 }
 
 .form-view-toolbar-back:hover {
-  color: var(--color-primary-dark);
-  border-color: var(--color-primary-light);
-  background: #fdf5f9;
-  box-shadow: 0 2px 8px rgba(154, 52, 112, 0.08);
+  color: var(--color-primary);
+  border-color: rgba(154, 52, 112, 0.28);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(154, 52, 112, 0.1);
+  transform: translateY(-1px);
 }
 
 .form-view-toolbar-back-icon {
-  font-size: 14px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--color-primary);
 }
 

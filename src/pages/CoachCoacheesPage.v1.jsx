@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import CreateCoacheeModal from '../components/CreateCoacheeModal';
 import EditCoacheeModal from '../components/EditCoacheeModal';
-import '../components/admin/AdminLayout.css';
-import '../components/coach/CoachLayout.css';
 import { createCoachee, fetchMyCoachees, updateCoachee } from '../services/coacheesApi';
+import './CoachCoacheesPage.css';
 
 function formatDate(value) {
   if (!value) return '—';
@@ -84,42 +83,45 @@ export default function CoachCoacheesPage() {
   };
 
   return (
-    <div className="admin-page">
-      <div className="admin-page-hero">
+    <div className="coach-coachees">
+      <div className="coach-coachees-hero">
         <h1>Coachees</h1>
-        <p className="admin-page-subtitle">
+        <p className="coach-coachees-subtitle">
           All coachees linked to your coach account.
         </p>
       </div>
 
-      <section className="admin-panel">
-        <div className="admin-panel-header">
+      <section className="coach-coachees-section">
+        <div className="coach-coachees-header">
           <h2>Your coachees</h2>
-          <div className="admin-panel-actions">
-            <span className="admin-panel-count">
+          <div className="coach-coachees-header-actions">
+            <span className="coach-coachees-count">
               {coachees.length} coachee{coachees.length === 1 ? '' : 's'}
             </span>
-            <button type="button" className="admin-btn" onClick={openCreateModal}>
+            <button
+              type="button"
+              className="coach-coachees-create-btn"
+              onClick={openCreateModal}
+            >
               Create coachee
             </button>
           </div>
         </div>
 
         {successMessage && (
-          <div className="admin-alert admin-alert--success">{successMessage}</div>
+          <div className="coach-coachees-success">{successMessage}</div>
         )}
 
-        {loading && <p className="admin-loading-dots">Loading coachees</p>}
-        {error && <p className="admin-alert admin-alert--error">{error}</p>}
+        {loading && <p className="coach-coachees-message">Loading coachees...</p>}
+        {error && <p className="coach-coachees-error">{error}</p>}
 
         {!loading && !error && coachees.length === 0 && (
-          <div className="admin-empty">
+          <div className="coach-coachees-empty">
             <p>No coachees are linked to your account yet.</p>
             <button
               type="button"
-              className="admin-btn"
+              className="coach-coachees-create-btn coach-coachees-create-btn--empty"
               onClick={openCreateModal}
-              style={{ marginTop: 16 }}
             >
               Create your first coachee
             </button>
@@ -127,8 +129,8 @@ export default function CoachCoacheesPage() {
         )}
 
         {!loading && !error && coachees.length > 0 && (
-          <div className="admin-table-wrap">
-            <table className="admin-table">
+          <div className="coach-coachees-table-wrap">
+            <table className="coach-coachees-table">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -141,14 +143,12 @@ export default function CoachCoacheesPage() {
               <tbody>
                 {coachees.map((coachee) => (
                   <tr key={coachee.coachee_id}>
-                    <td className="admin-table-name">{coachee.user_name}</td>
+                    <td className="coach-coachees-name">{coachee.user_name}</td>
                     <td>{coachee.email}</td>
                     <td>
                       <span
-                        className={`admin-status ${
-                          coachee.status === 'Active'
-                            ? 'admin-status--active'
-                            : 'admin-status--inactive'
+                        className={`coach-coachees-status ${
+                          coachee.status === 'Active' ? 'active' : 'inactive'
                         }`}
                       >
                         {coachee.status}

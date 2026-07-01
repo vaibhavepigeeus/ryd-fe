@@ -1,15 +1,14 @@
 import CoachHeader from './CoachHeader';
 import CoachSidebar from './CoachSidebar';
-import '../admin/AdminLayout.css';
 import './CoachLayout.css';
 
 export default function CoachLayout({ activeSection, onNavigate, children }) {
   return (
-    <div className="admin-layout coach-layout">
+    <div className="coach-layout">
       <CoachHeader />
-      <div className="admin-layout-body">
+      <div className="coach-layout-body">
         <CoachSidebar activeSection={activeSection} onNavigate={onNavigate} />
-        <main className="admin-main">{children}</main>
+        <main className="coach-main">{children}</main>
       </div>
     </div>
   );

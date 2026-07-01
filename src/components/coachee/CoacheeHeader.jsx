@@ -1,14 +1,14 @@
 import AccountMenu from '../layout/AccountMenu';
-import './CoachLayout.css';
+import '../admin/AdminLayout.css';
 
-export default function CoachHeader() {
+export default function CoacheeHeader() {
   return (
     <header className="admin-header">
       <div className="admin-header-left">
         <div className="admin-header-logo">R</div>
         <div className="admin-header-brand">
           <span className="admin-header-site">RYD Platform</span>
-          <span className="admin-header-badge">Coach Console</span>
+          <span className="admin-header-badge">Coachee Portal</span>
         </div>
       </div>
 

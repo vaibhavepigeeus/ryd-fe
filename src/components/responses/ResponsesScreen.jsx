@@ -6,13 +6,13 @@ import {
 } from '../../services/responsesApi';
 import { downloadResponsePdf } from '../../utils/downloadResponsePdf';
 import ResponseDetailView from './ResponseDetailView';
-import '../layout/PageStartScreen.css';
+import '../admin/AdminLayout.css';
 import './ResponsesScreen.css';
 
 function formatDate(value) {
-  if (!value) return '';
+  if (!value) return '—';
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
+  if (Number.isNaN(date.getTime())) return '—';
   return date.toLocaleString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -22,8 +22,52 @@ function formatDate(value) {
   });
 }
 
+function getSubmitterLabel(submission) {
+  const submitter = submission?.submitted_by;
+  if (submitter?.user_name) {
+    return submitter.user_name;
+  }
+  return 'Unknown submitter';
+}
+
+function getSubmitterEmail(submission) {
+  return submission?.submitted_by?.email || '—';
+}
+
+function getInitials(name) {
+  if (!name || name === 'Unknown submitter') return '?';
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
 function getPageTitle(page) {
   return page?.page_name || 'Untitled form';
+}
+
+function BackButton({ label, onClick }) {
+  return (
+    <div className="responses-toolbar">
+      <button type="button" className="responses-back-btn" onClick={onClick}>
+        <span className="responses-back-icon" aria-hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M15 6l-6 6 6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        {label}
+      </button>
+    </div>
+  );
 }
 
 export default function ResponsesScreen({ initialPageId = null, onBackToAll = null }) {
@@ -148,114 +192,215 @@ export default function ResponsesScreen({ initialPageId = null, onBackToAll = nu
   };
 
   if (view === 'detail' && selectedSubmission) {
-    return <ResponseDetailView submission={selectedSubmission} onBack={backToSubmissions} />;
+    return (
+      <ResponseDetailView
+        submission={selectedSubmission}
+        onBack={backToSubmissions}
+        backLabel="Back to responses"
+      />
+    );
   }
 
+  const backLabel = onBackToAll ? 'Back to dashboard' : 'All forms';
+  const totalResponses = pages.reduce((sum, page) => sum + (page.submission_count || 0), 0);
+
   return (
-    <main className="page-start-screen responses-screen">
-      <div className="page-start-screen-inner">
+    <main className="responses-screen">
+      <div className="responses-screen-inner admin-dashboard">
         {view === 'forms' ? (
           <>
-            <header className="page-start-header page-start-header--list">
-              <h1>Responses</h1>
-              <p>Select a form to view submitted responses.</p>
-            </header>
+            <section className="admin-hero">
+              <div className="admin-hero-content">
+                <span className="admin-hero-eyebrow">Coach console</span>
+                <h1>Form responses</h1>
+                <p className="admin-hero-subtitle">
+                  Select a form below to review who submitted responses and download PDFs.
+                </p>
+              </div>
+              {!loading && pages.length > 0 && (
+                <div className="responses-hero-stats">
+                  <span className="responses-hero-stat">
+                    <strong>{pages.length}</strong> forms
+                  </span>
+                  <span className="responses-hero-stat">
+                    <strong>{totalResponses}</strong> responses
+                  </span>
+                </div>
+              )}
+            </section>
 
             {loading && !pages.length && (
-              <p className="page-start-status">Loading forms...</p>
+              <p className="admin-loading-dots">Loading forms</p>
             )}
-            {error && <p className="page-start-status page-start-status--error">{error}</p>}
+            {error && <p className="admin-alert admin-alert--error">{error}</p>}
 
             {!loading && !error && pages.length === 0 && (
-              <div className="page-start-empty">
-                <p>No forms found yet. Build and publish a form to collect responses.</p>
-              </div>
+              <section className="admin-panel">
+                <div className="admin-empty">
+                  <p>No forms found yet. Build and publish a form to collect responses.</p>
+                </div>
+              </section>
             )}
 
             {pages.length > 0 && (
-              <div className="page-start-grid">
-                {pages.map((page) => (
-                  <button
-                    key={page.id}
-                    type="button"
-                    className="page-start-page-card"
-                    onClick={() => openPage(page)}
-                    disabled={loading}
-                  >
-                    <span className="page-start-page-card-top">
-                      <span className="page-start-page-card-title">{getPageTitle(page)}</span>
-                      <span className="responses-count-badge">
-                        {page.submission_count || 0}{' '}
-                        {(page.submission_count || 0) === 1 ? 'response' : 'responses'}
+              <>
+                <h2 className="admin-section-title">Your forms</h2>
+                <div className="responses-forms-grid">
+                  {pages.map((page) => (
+                    <button
+                      key={page.id}
+                      type="button"
+                      className="responses-form-card"
+                      onClick={() => openPage(page)}
+                      disabled={loading}
+                    >
+                      <span className="responses-form-card-top">
+                        <span className="responses-form-card-title">{getPageTitle(page)}</span>
+                        <span className="responses-count-badge">
+                          {page.submission_count || 0}{' '}
+                          {(page.submission_count || 0) === 1 ? 'response' : 'responses'}
+                        </span>
                       </span>
-                    </span>
-                    <span className="page-start-page-card-meta">
-                      {page.is_published ? 'Published' : 'Draft'} · Updated{' '}
-                      {formatDate(page.updated_at)}
-                    </span>
-                    <span className="page-start-page-card-action">View responses →</span>
-                  </button>
-                ))}
-              </div>
+                      <span className="responses-form-card-meta">
+                        {page.is_published ? 'Published' : 'Draft'} · Updated{' '}
+                        {formatDate(page.updated_at)}
+                      </span>
+                      <span className="responses-form-card-action">View responses →</span>
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
           </>
         ) : view === 'loading' ? (
-          <p className="page-start-status">Loading responses...</p>
+          <p className="admin-loading-dots">Loading responses</p>
         ) : (
           <>
-            <header className="page-start-header page-start-header--list">
-              <button type="button" className="page-start-back" onClick={backToForms}>
-                {onBackToAll ? '← Back to dashboard' : '← All forms'}
-              </button>
-              <h1>{getPageTitle(selectedPage)}</h1>
-              <p>
-                {submissions.length}{' '}
-                {submissions.length === 1 ? 'response' : 'responses'} submitted
-              </p>
-            </header>
+            <BackButton label={backLabel} onClick={backToForms} />
 
-            {loading && !submissions.length && (
-              <p className="page-start-status">Loading responses...</p>
-            )}
-            {error && <p className="page-start-status page-start-status--error">{error}</p>}
-
-            {!loading && !error && submissions.length === 0 && (
-              <div className="page-start-empty">
-                <p>No responses for this form yet.</p>
+            <section className="admin-hero">
+              <div className="admin-hero-content">
+                <span className="admin-hero-eyebrow">Form responses</span>
+                <h1>{getPageTitle(selectedPage)}</h1>
+                <p className="admin-hero-subtitle">
+                  {submissions.length}{' '}
+                  {submissions.length === 1 ? 'response' : 'responses'} submitted
+                </p>
               </div>
-            )}
+            </section>
 
-            {submissions.length > 0 && (
-              <ul className="responses-list">
-                {submissions.map((submission) => (
-                  <li key={submission.id} className="responses-list-row">
-                    <button
-                      type="button"
-                      className="responses-list-item"
-                      onClick={() => openSubmission(submission)}
-                      disabled={loading || Boolean(downloadingId)}
-                    >
-                      <span className="responses-list-item-title">
-                        Response #{submission.id}
-                      </span>
-                      <span className="responses-list-item-date">
-                        {formatDate(submission.submitted_at)}
-                      </span>
-                      <span className="responses-list-item-action">View response →</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="responses-download-btn"
-                      onClick={(event) => handleDownload(submission, event)}
-                      disabled={loading || downloadingId === submission.id}
-                      title="Download response as PDF"
-                    >
-                      {downloadingId === submission.id ? '...' : '↓ PDF'}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <section className="admin-panel responses-panel">
+              <div className="responses-panel-header">
+                <div className="responses-panel-header-text">
+                  <h2>All responses</h2>
+                  <p className="responses-panel-desc">
+                    Click a row to open the full response, or download a PDF.
+                  </p>
+                </div>
+                <span className="responses-panel-count">
+                  {submissions.length} total
+                </span>
+              </div>
+
+              {loading && !submissions.length && (
+                <p className="admin-loading-dots responses-panel-message">Loading responses</p>
+              )}
+              {error && <p className="admin-alert admin-alert--error responses-panel-message">{error}</p>}
+
+              {!loading && !error && submissions.length === 0 && (
+                <div className="admin-empty responses-panel-message">
+                  <p>No responses for this form yet.</p>
+                </div>
+              )}
+
+              {!loading && !error && submissions.length > 0 && (
+                <div className="responses-table-wrap">
+                  <table className="responses-table">
+                    <thead>
+                      <tr>
+                        <th className="responses-table-col-submitter">Submitter</th>
+                        <th className="responses-table-col-response">Response</th>
+                        <th className="responses-table-col-date">Submitted</th>
+                        <th className="responses-table-col-actions">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {submissions.map((submission) => {
+                        const name = getSubmitterLabel(submission);
+                        const isUnknown = !submission?.submitted_by;
+
+                        return (
+                          <tr
+                            key={submission.id}
+                            className="responses-table-row"
+                            onClick={() => openSubmission(submission)}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                openSubmission(submission);
+                              }
+                            }}
+                            tabIndex={0}
+                            role="button"
+                            aria-label={`View response from ${name}`}
+                          >
+                            <td className="responses-table-col-submitter">
+                              <div className="responses-submitter-cell">
+                                <span
+                                  className={`responses-avatar ${
+                                    isUnknown ? 'responses-avatar--unknown' : ''
+                                  }`}
+                                >
+                                  {getInitials(name)}
+                                </span>
+                                <span className="responses-submitter-info">
+                                  <span className="responses-submitter-name">{name}</span>
+                                  <span className="responses-submitter-email">
+                                    {getSubmitterEmail(submission)}
+                                  </span>
+                                </span>
+                              </div>
+                            </td>
+                            <td className="responses-table-col-response">
+                              <span className="responses-response-id">
+                                #{submission.id}
+                              </span>
+                            </td>
+                            <td className="responses-table-col-date">
+                              {formatDate(submission.submitted_at)}
+                            </td>
+                            <td className="responses-table-col-actions">
+                              <div className="responses-actions-cell">
+                                <button
+                                  type="button"
+                                  className="responses-table-btn responses-table-btn--view"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    openSubmission(submission);
+                                  }}
+                                  disabled={loading || Boolean(downloadingId)}
+                                >
+                                  View
+                                </button>
+                                <button
+                                  type="button"
+                                  className="responses-table-btn responses-table-btn--pdf"
+                                  onClick={(event) => handleDownload(submission, event)}
+                                  disabled={loading || downloadingId === submission.id}
+                                  title="Download response as PDF"
+                                >
+                                  {downloadingId === submission.id ? '...' : 'PDF'}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
           </>
         )}
       </div>

@@ -1,11 +1,4 @@
 import { useEffect, useState } from 'react';
-import {
-  ChevronRightIcon,
-  CoacheesIcon,
-  DashboardIcon,
-  FormsIcon,
-  UsersIcon,
-} from '../admin/AdminIcons';
 import './CoachLayout.css';
 
 const USERS_SUB_ITEMS = [
@@ -14,7 +7,9 @@ const USERS_SUB_ITEMS = [
 ];
 
 export default function CoachSidebar({ activeSection, onNavigate }) {
-  const [usersOpen, setUsersOpen] = useState(activeSection === 'coachees');
+  const [usersOpen, setUsersOpen] = useState(
+    activeSection === 'coachees',
+  );
 
   useEffect(() => {
     if (activeSection === 'coachees') {
@@ -29,44 +24,34 @@ export default function CoachSidebar({ activeSection, onNavigate }) {
   };
 
   return (
-    <aside className="admin-sidebar">
-      <span className="admin-sidebar-label">Navigation</span>
-      <nav className="admin-sidebar-nav">
+    <aside className="coach-sidebar">
+      <nav className="coach-sidebar-nav">
         <button
           type="button"
-          className={`admin-sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
+          className={`coach-sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
           onClick={() => onNavigate('dashboard')}
         >
-          <span className="admin-sidebar-icon">
-            <DashboardIcon />
-          </span>
           Dashboard
         </button>
 
         <button
           type="button"
-          className={`admin-sidebar-item ${activeSection === 'builder' ? 'active' : ''}`}
+          className={`coach-sidebar-item ${activeSection === 'builder' ? 'active' : ''}`}
           onClick={() => onNavigate('builder')}
         >
-          <span className="admin-sidebar-icon">
-            <FormsIcon />
-          </span>
           Builder
         </button>
 
         <div className="coach-sidebar-group">
           <button
             type="button"
-            className={`admin-sidebar-item coach-sidebar-parent ${usersOpen ? 'open' : ''}`}
+            className={`coach-sidebar-item coach-sidebar-item--parent ${usersOpen ? 'open' : ''}`}
             onClick={() => setUsersOpen((open) => !open)}
             aria-expanded={usersOpen}
           >
-            <span className="admin-sidebar-icon">
-              <UsersIcon />
-            </span>
-            <span className="coach-sidebar-parent-label">Users</span>
-            <span className={`coach-sidebar-chevron ${usersOpen ? 'open' : ''}`} aria-hidden>
-              <ChevronRightIcon />
+            <span>Users</span>
+            <span className="coach-sidebar-chevron" aria-hidden>
+              {usersOpen ? '▾' : '▸'}
             </span>
           </button>
 
@@ -81,11 +66,6 @@ export default function CoachSidebar({ activeSection, onNavigate }) {
                   }`}
                   onClick={() => handleUsersSubClick(item.id)}
                 >
-                  {item.id === 'coachees' && (
-                    <span className="coach-sidebar-subicon">
-                      <CoacheesIcon />
-                    </span>
-                  )}
                   {item.label}
                 </button>
               ))}

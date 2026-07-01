@@ -27,13 +27,13 @@ body:has(.published-page) {
 body:has(.coach-layout),
 body:has(.admin-layout) {
   overflow: auto;
-  background: #f6f6f6;
+  background: #f4f2f6;
   color: #1a1a1a;
 }
 
 body:has(.coachee-dashboard) {
   overflow: auto;
-  background: #f0f2f5;
+  background: linear-gradient(160deg, #f8f4f6 0%, #f0f2f5 45%, #eef1f8 100%);
   color: #1a1a1a;
 }
 

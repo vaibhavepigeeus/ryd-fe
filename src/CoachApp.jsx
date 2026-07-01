@@ -67,6 +67,7 @@ export default function CoachApp() {
     <CoachDashboard
       onOpenBuilder={() => navigate('builder')}
       onOpenResponses={(pageId) => navigate('builder', pageId)}
+      onNavigateCoachees={() => navigate('coachees')}
     />
   );
 

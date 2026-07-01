@@ -1,0 +1,301 @@
+/* Coachee-specific overrides on top of the admin portal theme */
+
+.coachee-main--form {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.coachee-form-view {
+  flex: 1;
+  overflow: auto;
+}
+
+.coachee-dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.coachee-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.coachee-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--admin-text-muted);
+  background: #faf8fb;
+  border: 1px solid var(--admin-border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.coachee-filter-btn:hover:not(:disabled) {
+  border-color: rgba(154, 52, 112, 0.25);
+  color: var(--color-primary);
+}
+
+.coachee-filter-btn--active {
+  color: var(--color-primary-dark);
+  background: rgba(154, 52, 112, 0.1);
+  border-color: rgba(154, 52, 112, 0.3);
+}
+
+.coachee-filter-btn--empty:not(.coachee-filter-btn--active) {
+  opacity: 0.55;
+}
+
+.coachee-filter-count {
+  min-width: 18px;
+  padding: 1px 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.coachee-forms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.coachee-form-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 18px;
+  background: #faf8fb;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  border-left-width: 4px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.coachee-form-card--submitted {
+  border-left-color: #1976d2;
+}
+
+.coachee-form-card--draft {
+  border-left-color: #ed6c02;
+}
+
+.coachee-form-card--pending {
+  border-left-color: #2e7d32;
+}
+
+.coachee-form-card--static:hover {
+  border-color: rgba(154, 52, 112, 0.25);
+  box-shadow: var(--admin-shadow-md);
+  transform: translateY(-1px);
+}
+
+.coachee-form-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.coachee-form-card-heading {
+  min-width: 0;
+  flex: 1;
+}
+
+.coachee-form-card-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.35;
+}
+
+.coachee-form-card-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  color: var(--admin-text-muted);
+  line-height: 1.3;
+}
+
+.coachee-form-card-badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #2e7d32;
+  background: #e8f5e9;
+  border-radius: 999px;
+}
+
+.coachee-form-card-badge--submitted {
+  color: #1976d2;
+  background: rgba(25, 118, 210, 0.12);
+}
+
+.coachee-form-card-badge--draft {
+  color: #ed6c02;
+  background: rgba(237, 108, 2, 0.12);
+}
+
+.coachee-form-card-meta {
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  color: var(--admin-text-muted);
+}
+
+.coachee-form-card-meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.coachee-form-card-meta-group .coachee-form-card-meta {
+  margin-bottom: 0;
+}
+
+.coachee-forms-group + .coachee-forms-group {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--admin-border);
+}
+
+.coachee-forms-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.coachee-forms-group-header h4 {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.coachee-form-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.coachee-form-card-btn-link {
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--admin-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.coachee-form-card-btn-link:hover:not(:disabled) {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.coachee-skeleton {
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f4f2f6 25%, #faf8fb 50%, #f4f2f6 75%);
+  background-size: 200% 100%;
+  animation: coachee-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.coachee-skeleton--title {
+  width: 70%;
+  height: 16px;
+  margin-bottom: 10px;
+}
+
+.coachee-skeleton--meta {
+  width: 50%;
+  height: 12px;
+  margin-bottom: 16px;
+}
+
+.coachee-skeleton--btn {
+  width: 100px;
+  height: 32px;
+}
+
+.coachee-form-card--skeleton {
+  border-left-width: 1px;
+  pointer-events: none;
+}
+
+.coachee-panel-desc {
+  margin: -12px 0 20px;
+  font-size: 0.85rem;
+  color: var(--admin-text-muted);
+  line-height: 1.5;
+}
+
+.coachee-table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.coachee-table-action {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(154, 52, 112, 0.06);
+  border: 1px solid rgba(154, 52, 112, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.coachee-table-action:hover:not(:disabled) {
+  background: rgba(154, 52, 112, 0.12);
+}
+
+.coachee-table-action:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+@keyframes coachee-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .coachee-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .coachee-forms-grid {
+    grid-template-columns: 1fr;
+  }
+}

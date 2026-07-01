@@ -40,7 +40,11 @@ export default function ResponseDetailView({ submission, onBack, backLabel = 'Ba
         onBack={onBack}
         backLabel={backLabel}
         title={pageTitle}
-        subtitle={`Submitted ${formatSubmittedAt(submission.submitted_at)}`}
+        subtitle={[
+          submission.submitted_by?.user_name && `Submitted by ${submission.submitted_by.user_name}`,
+          submission.submitted_by?.email,
+          formatSubmittedAt(submission.submitted_at) && `on ${formatSubmittedAt(submission.submitted_at)}`,
+        ].filter(Boolean).join(' · ')}
       >
         <button
           type="button"

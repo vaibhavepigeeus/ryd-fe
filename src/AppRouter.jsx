@@ -7,6 +7,7 @@ import VerifyOtpPage from './pages/VerifyOtpPage';
 import CreatePasswordPage from './pages/CreatePasswordPage';
 import CoacheeDashboard from './pages/CoacheeDashboard';
 import CoachApp from './CoachApp';
+import AdminApp from './AdminApp';
 import './pages/AuthPages.css';
 
 function AuthLoading() {
@@ -22,7 +23,7 @@ const PUBLIC_AUTH_ROUTES = new Set([
 ]);
 
 export default function AppRouter({ authRoute, onAuthNavigate }) {
-  const { user, loading, isCoach, isCoachee } = useAuth();
+  const { user, loading, isAdmin, isCoach, isCoachee } = useAuth();
 
   useEffect(() => {
     if (user && PUBLIC_AUTH_ROUTES.has(authRoute)) {
@@ -56,6 +57,10 @@ export default function AppRouter({ authRoute, onAuthNavigate }) {
 
   if (!user) {
     return <LoginPage onNavigate={onAuthNavigate} />;
+  }
+
+  if (isAdmin) {
+    return <AdminApp />;
   }
 
   if (isCoachee) {

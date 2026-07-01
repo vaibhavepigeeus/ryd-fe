@@ -7,6 +7,9 @@ function getAuthRouteFromPath() {
 
   if (path === '/login') return 'login';
   if (path === '/register') return 'register';
+  if (path === '/forgot-password') return 'forgot-password';
+  if (path === '/verify-otp') return 'verify-otp';
+  if (path === '/create-password') return 'create-password';
   return null;
 }
 
@@ -14,7 +17,14 @@ export default function App() {
   const [authRoute, setAuthRoute] = useState(getAuthRouteFromPath);
 
   const onAuthNavigate = useCallback((route) => {
-    const path = route === 'register' ? '/register' : '/login';
+    const paths = {
+      login: '/login',
+      register: '/register',
+      'forgot-password': '/forgot-password',
+      'verify-otp': '/verify-otp',
+      'create-password': '/create-password',
+    };
+    const path = paths[route] || '/login';
     window.history.pushState({}, '', path);
     setAuthRoute(route);
   }, []);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './AuthPages.css';
 
@@ -7,7 +7,15 @@ export default function LoginPage({ onNavigate }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('password_reset_success')) {
+      localStorage.removeItem('password_reset_success');
+      setSuccessMessage('Your password has been updated. Sign in with your new password.');
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,6 +41,7 @@ export default function LoginPage({ onNavigate }) {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {successMessage && <div className="auth-success">{successMessage}</div>}
           {error && <div className="auth-error">{error}</div>}
 
           <div className="auth-field">
@@ -49,7 +58,19 @@ export default function LoginPage({ onNavigate }) {
           </div>
 
           <div className="auth-field">
-            <label htmlFor="password">Password</label>
+            <div className="auth-field-header">
+              <label htmlFor="password">Password</label>
+              <a
+                href="/forgot-password"
+                className="auth-forgot-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate('forgot-password');
+                }}
+              >
+                Forgot password?
+              </a>
+            </div>
             <input
               id="password"
               type="password"
